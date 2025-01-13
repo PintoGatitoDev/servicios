@@ -1,0 +1,11 @@
+[
+  {
+    "id": "14fbfc2f-f1e3-4e05-8f18-1deb9b8aec07",
+    "nombre": "Juan",
+    "edad": "123",
+    "cargo": "Nose",
+    "correo": "pepe@pepe.com",
+    "telefono": "5555555555",
+    "direccion": "calle 5"
+  }
+]

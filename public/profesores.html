@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gestionar Profesores - TICS Globals</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>TICS Globals</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li>
+                    <a href="#">Estudiantes</a>
+                    <ul class="submenu">
+                        <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+                        <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Profesores</a>
+                    <ul class="submenu">
+                        <li><a href="profesores.html">Ver Profesores</a></li>
+                        <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Personal Administrativo</a>
+                    <ul class="submenu">
+                        <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+                        <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Planes de Estudio</a></li>
+                <li><a href="#">Asignaturas</a></li>
+                <li><a href="#">Horarios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-section">
+        <div>
+            <h2>Lista de Profesores</h2>
+
+            <a href="altaProfesores.html">
+                <button class="add-button">Agregar nuevo profesor</button>
+            </a>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Especialidad</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Dirección</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="listaProfesores"> </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+    <script>
+        // Función para obtener la lista de profesores del servidor
+        async function obtenerProfesores() {
+            try {
+                const response = await fetch('http://localhost:3000/obtenerProfesores');
+                if (!response.ok) {
+                    throw new Error('Error al obtener la lista de profesores');
+                }
+                const data = await response.json();
+
+                const listaProfesores = document.getElementById('listaProfesores');
+                listaProfesores.innerHTML = '';
+
+                data.profesores.forEach(profesor => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+            <td>${profesor.id}</td>
+            <td>${profesor.nombre}</td>
+            <td>${profesor.edad}</td>
+            <td>${profesor.especialidad}</td> 
+            <td>${profesor.correo}</td>
+            <td>${profesor.telefono}</td>
+            <td>${profesor.direccion}</td>
+            <td>
+              <a href="editarProfesor.html?id=${profesor.id}"><button>Editar</button></a> 
+              <button onclick="eliminarProfesor('${profesor.id}')">Eliminar</button> 
+            </td>
+          `;
+                    listaProfesores.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error('Error al obtener la lista de profesores:', error);
+                alert('Error al obtener la lista de profesores');
+            }
+        }
+
+        // Función para eliminar un profesor
+        async function eliminarProfesor(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar este profesor?')) {
+                try {
+                    const response = await fetch(`http://localhost:3000/eliminarProfesor/${id}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        alert('Profesor eliminado exitosamente');
+                        obtenerProfesores();
+                    } else {
+                        alert('Error al eliminar el profesor');
+                    }
+                } catch (error) {
+                    console.error('Error al eliminar el profesor:', error);
+                    alert('Error al eliminar el profesor');
+                }
+            }
+        }
+
+        // Llamar a la función para obtener la lista de profesores al cargar la página
+        obtenerProfesores();
+    </script>
+
+</body>
+
+</html>

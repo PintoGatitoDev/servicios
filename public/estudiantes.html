@@ -1,60 +1,77 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Gestionar Estudiantes - TICS Globals</title>
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
+
 <body>
 
-<header>
-  <h1>TICS Globals</h1>
-  <nav>
-    <ul>
-      <li><a href="index.html">Inicio</a></li>
-      <li>
-        <a href="#">Estudiantes</a> 
-        <ul class="submenu">
-          <li><a href="estudiantes.html">Ver Estudiantes</a></li>
-          <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
-        </ul>
-      </li>
-      <li><a href="profesores.html">Profesores</a></li>
-      <li><a href="#">Planes de Estudio</a></li>
-      <li><a href="#">Asignaturas</a></li>
-      <li><a href="#">Horarios</a></li>
-    </ul>
-</header>
+  <header>
+    <h1>TICS Globals</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li>
+          <a href="#">Estudiantes</a>
+          <ul class="submenu">
+            <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+            <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Profesores</a>
+          <ul class="submenu">
+            <li><a href="profesores.html">Ver Profesores</a></li>
+            <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Personal Administrativo</a>
+          <ul class="submenu">
+            <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+            <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Planes de Estudio</a></li>
+        <li><a href="#">Asignaturas</a></li>
+        <li><a href="#">Horarios</a></li>
+      </ul>
+    </nav>
+  </header>
 
-<div class="main-section">
-  <div>
-    <h2>Lista de Estudiantes</h2>
+  <div class="main-section">
+    <div>
+      <h2>Lista de Estudiantes</h2>
 
-    <a href="altaEstudiantes.html"> 
-      <button class="add-button">Agregar nuevo estudiante</button> 
-    </a>
+      <a href="altaEstudiantes.html">
+        <button class="add-button">Agregar nuevo estudiante</button>
+      </a>
 
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Edad</th>
-          <th>Grado</th>
-          <th>Correo</th>
-          <th>Teléfono</th>
-          <th>Dirección</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="listaEstudiantes"></tbody>
-    </table>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Edad</th>
+            <th>Grado</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="listaEstudiantes"></tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<script src="scripts.js"></script> 
-<script>
-  obtenerEstudiantes();
-</script>
+  <script src="scripts.js"></script>
+  <script>
+    obtenerEstudiantes();
+  </script>
 
 </body>
+
 </html>

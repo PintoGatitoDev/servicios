@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Alta de Personal Administrativo - TICS Globals</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>TICS Globals</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li>
+                    <a href="#">Estudiantes</a>
+                    <ul class="submenu">
+                        <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+                        <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Profesores</a>
+                    <ul class="submenu">
+                        <li><a href="profesores.html">Ver Profesores</a></li>
+                        <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Personal Administrativo</a>
+                    <ul class="submenu">
+                        <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+                        <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Planes de Estudio</a></li>
+                <li><a href="#">Asignaturas</a></li>
+                <li><a href="#">Horarios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-section">
+        <div>
+            <h2>Alta de Personal Administrativo</h2>
+            <form id="registrarPersonalForm">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" placeholder="Nombre" required><br>
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" placeholder="Edad" required><br>
+                <label for="cargo">Cargo:</label>
+                <input type="text" id="cargo" placeholder="Cargo" required><br>
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" id="correo" placeholder="Correo Electrónico" required><br>
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono" placeholder="Teléfono" required><br>
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" placeholder="Dirección" required><br>
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+    <script>
+        // Manejar el formulario de registro de personal administrativo
+        const registrarPersonalForm = document.getElementById('registrarPersonalForm');
+        if (registrarPersonalForm) {
+            registrarPersonalForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const nombre = document.getElementById('nombre').value;
+                const edad = document.getElementById('edad').value;
+                const cargo = document.getElementById('cargo').value;
+                const correo = document.getElementById('correo').value;
+                const telefono = document.getElementById('telefono').value;
+                const direccion = document.getElementById('direccion').value;
+
+                try {
+                    const response = await fetch('http://localhost:3000/registrarPersonalAdministrativo', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ nombre, edad, cargo, correo, telefono, direccion }),
+                    });
+
+                    if (response.ok) {
+                        alert('Personal administrativo registrado exitosamente');
+                        registrarPersonalForm.reset();
+                        window.location.href = 'personalAdministrativo.html';
+                    } else {
+                        alert('Error al registrar el personal administrativo');
+                    }
+                } catch (error) {
+                    console.error('Error al registrar el personal administrativo:', error);
+                    alert('Error al registrar el personal administrativo');
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>

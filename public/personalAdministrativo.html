@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gestionar Personal Administrativo - TICS Globals</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>TICS Globals</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li>
+                    <a href="#">Estudiantes</a>
+                    <ul class="submenu">
+                        <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+                        <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Profesores</a>
+                    <ul class="submenu">
+                        <li><a href="profesores.html">Ver Profesores</a></li>
+                        <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Personal Administrativo</a>
+                    <ul class="submenu">
+                        <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+                        <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Planes de Estudio</a></li>
+                <li><a href="#">Asignaturas</a></li>
+                <li><a href="#">Horarios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-section">
+        <div>
+            <h2>Lista de Personal Administrativo</h2>
+
+            <a href="altaPersonalAdministrativo.html">
+                <button class="add-button">Agregar nuevo personal</button>
+            </a>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Cargo</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Dirección</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="listaPersonalAdministrativo"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+    <script>
+        async function obtenerPersonalAdministrativo() {
+            try {
+                const response = await fetch('http://localhost:3000/obtenerPersonalAdministrativo');
+                if (!response.ok) {
+                    throw new Error('Error al obtener la lista del personal administrativo');
+                }
+                const data = await response.json();
+
+                const listaPersonal = document.getElementById('listaPersonalAdministrativo');
+                listaPersonal.innerHTML = '';
+
+                data.personal.forEach(personal => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+        <td>${personal.id}</td>
+        <td>${personal.nombre}</td>
+        <td>${personal.edad}</td>
+        <td>${personal.cargo}</td>
+        <td>${personal.correo}</td>
+        <td>${personal.telefono}</td>
+        <td>${personal.direccion}</td>
+        <td>
+          <a href="editarPersonalAdministrativo.html?id=${personal.id}"><button>Editar</button></a>
+          <button onclick="eliminarPersonalAdministrativo('${personal.id}')">Eliminar</button>
+        </td>
+      `;
+                    listaPersonal.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error('Error al obtener la lista del personal administrativo:', error);
+                alert('Error al obtener la lista del personal administrativo');
+            }
+        }
+
+        async function eliminarPersonalAdministrativo(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar este personal administrativo?')) {
+                try {
+                    const response = await fetch(`http://localhost:3000/eliminarPersonalAdministrativo/${id}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        alert('Personal administrativo eliminado exitosamente');
+                        obtenerPersonalAdministrativo();
+                    } else {
+                        alert('Error al eliminar el personal administrativo');
+                    }
+                } catch (error) {
+                    console.error('Error al eliminar el personal administrativo:', error);
+                    alert('Error al eliminar el personal administrativo');
+                }
+            }
+        }
+        obtenerPersonalAdministrativo();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Editar Personal Administrativo - TICS Globals</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>TICS Globals</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li>
+                    <a href="#">Estudiantes</a>
+                    <ul class="submenu">
+                        <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+                        <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Profesores</a>
+                    <ul class="submenu">
+                        <li><a href="profesores.html">Ver Profesores</a></li>
+                        <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Personal Administrativo</a>
+                    <ul class="submenu">
+                        <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+                        <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Planes de Estudio</a></li>
+                <li><a href="#">Asignaturas</a></li>
+                <li><a href="#">Horarios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-section">
+        <div>
+            <h2>Editar Personal Administrativo</h2>
+            <form id="editarPersonalForm">
+                <input type="hidden" id="idPersonal">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" placeholder="Nombre" required><br>
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" placeholder="Edad" required><br>
+                <label for="cargo">Cargo:</label>
+                <input type="text" id="cargo" placeholder="Cargo" required><br>
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" id="correo" placeholder="Correo Electrónico" required><br>
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono" placeholder="Teléfono" required><br>
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" placeholder="Dirección" required><br>
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+    <script>
+        // Obtener el ID del personal administrativo de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const idPersonal = urlParams.get('id');
+
+        // Llenar el formulario con los datos del personal administrativo
+        if (idPersonal) {
+            fetch(`http://localhost:3000/obtenerPersonalAdministrativo/${idPersonal}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al obtener los datos del personal administrativo');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('idPersonal').value = data.personal.id;
+                    document.getElementById('nombre').value = data.personal.nombre;
+                    document.getElementById('edad').value = data.personal.edad;
+                    document.getElementById('cargo').value = data.personal.cargo;
+                    document.getElementById('correo').value = data.personal.correo;
+                    document.getElementById('telefono').value = data.personal.telefono;
+                    document.getElementById('direccion').value = data.personal.direccion;
+                })
+                .catch(error => {
+                    console.error('Error al obtener los datos del personal administrativo:', error);
+                    alert('Error al obtener los datos del personal administrativo');
+                });
+        }
+
+        // Agregar un event listener al formulario para enviar los datos actualizados al servidor
+        const form = document.getElementById('editarPersonalForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('idPersonal').value;
+            const nombre = document.getElementById('nombre').value;
+            const edad = document.getElementById('edad').value;
+            const cargo = document.getElementById('cargo').value;
+            const correo = document.getElementById('correo').value;
+            const telefono = document.getElementById('telefono').value;
+            const direccion = document.getElementById('direccion').value;
+
+            try {
+                const response = await fetch(`http://localhost:3000/actualizarPersonalAdministrativo/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nombre, edad, cargo, correo, telefono, direccion }),
+                });
+
+                if (response.ok) {
+                    alert('Personal administrativo actualizado exitosamente');
+                    window.location.href = 'personalAdministrativo.html';
+                } else {
+                    alert('Error al actualizar el personal administrativo');
+                }
+            } catch (error) {
+                console.error('Error al actualizar el personal administrativo:', error);
+                alert('Error al actualizar el personal administrativo');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
