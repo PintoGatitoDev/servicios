@@ -1,0 +1,159 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    background-color: #f8f8f8;
+    color: #333;
+  }
+  
+  /* Estilos para el encabezado */
+  header {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  h1 {
+    margin: 0;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-top: 30px;
+    color: #333;
+  }
+  
+  /* Estilos para el menú */
+  nav ul {
+    list-style: none; /* Quitar los puntos de la lista */
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav ul li {
+    display: inline-block; /* Mostrar los elementos en línea */
+    position: relative; /* Para posicionar el submenú */
+  }
+  
+  nav ul li a {
+    display: block; /* Convertir los enlaces en bloques */
+    padding: 10px 20px;
+    text-decoration: none; /* Quitar la decoración de los enlaces */
+    color: #ffffff; /* Color del texto de los enlaces */
+  }
+  
+  /* Estilo del submenú */
+  .submenu {
+    display: none; /* Ocultar el submenú por defecto */
+    position: absolute; 
+    top: 100%; /* Posicionar el submenú debajo del elemento principal */
+    left: 0;
+    background-color: #645b5b;
+  }
+  
+  /* Mostrar el submenú al pasar el ratón */
+  nav ul li:hover .submenu {
+    display: block;
+  }
+  
+  /* Estilos para el contenedor principal */
+  .main-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  /* Estilos para el formulario */
+  form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  input[type="hidden"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #0069d9;
+  }
+  
+  /* Estilos para la tabla */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+  
+  tbody tr {
+    transition: background-color 0.3s ease;
+  }
+  
+  tbody tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .action-buttons button {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  /* Responsividad con media queries */
+  @media (max-width: 768px) {
+    table {
+      font-size: 14px;
+    }
+  
+    th, td {
+      padding: 10px;
+    }
+  }

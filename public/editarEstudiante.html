@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Editar Estudiante - TICS Globals</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+
+<header>
+  <h1>TICS Globals</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li>
+        <a href="#">Estudiantes</a> 
+        <ul class="submenu">
+          <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+          <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+        </ul>
+      </li>
+      <li><a href="profesores.html">Profesores</a></li>
+      <li><a href="#">Planes de Estudio</a></li>
+      <li><a href="#">Asignaturas</a></li>
+      <li><a href="#">Horarios</a></li>
+    </ul>
+</header>
+
+<div class="main-section">
+  <div>
+    <h2>Editar Estudiante</h2>
+    <form id="editarEstudianteForm">
+      <input type="hidden" id="idEstudiante">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" placeholder="Nombre" required><br>
+      <label for="edad">Edad:</label>
+      <input type="number" id="edad" placeholder="Edad" required><br>
+      <label for="grado">Grado:</label>
+      <input type="text" id="grado" placeholder="Grado" required><br>
+      <button type="submit">Guardar Cambios</button>
+    </form>
+  </div>
+</div>
+
+<script src="scripts.js"></script>
+<script>
+  // Obtener el ID del estudiante de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const idEstudiante = urlParams.get('id');
+
+  // Llenar el formulario con los datos del estudiante
+  if (idEstudiante) {
+    fetch(`http://localhost:3000/obtenerEstudiante/${idEstudiante}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al obtener los datos del estudiante');
+        }
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById('idEstudiante').value = data.estudiante.id;
+        document.getElementById('nombre').value = data.estudiante.nombre;
+        document.getElementById('edad').value = data.estudiante.edad;
+        document.getElementById('grado').value = data.estudiante.grado;
+      })
+      .catch(error => {
+        console.error('Error al obtener los datos del estudiante:', error);
+        alert('Error al obtener los datos del estudiante');
+      });
+  }
+
+  // Agregar un event listener al formulario para enviar los datos actualizados al servidor
+  const form = document.getElementById('editarEstudianteForm');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = document.getElementById('idEstudiante').value;
+    const nombre = document.getElementById('nombre').value;
+    const edad = document.getElementById('edad').value;
+    const grado = document.getElementById('grado').value;
+
+    try {
+      const response = await fetch(`http://localhost:3000/actualizarEstudiante/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nombre, edad, grado }),
+      });
+
+      if (response.ok) {
+        alert('Estudiante actualizado exitosamente');
+        window.location.href = 'estudiantes.html'; 
+      } else {
+        alert('Error al actualizar el estudiante');
+      }
+    } catch (error) {
+      console.error('Error al actualizar el estudiante:', error);
+      alert('Error al actualizar el estudiante');
+    }
+  });
+</script>
+
+</body>
+</html>
