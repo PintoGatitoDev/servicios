@@ -83,7 +83,9 @@ body {
   
   input[type="text"],
   input[type="number"],
-  input[type="hidden"] {
+  input[type="hidden"],
+  input[type="tel"],
+  input[type="email"] {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;

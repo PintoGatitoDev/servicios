@@ -22,11 +22,14 @@ app.use(cors());
 
 // Registro y gestión de estudiantes, profesores y personal administrativo.
 class Estudiante {
-    constructor(id, nombre, edad, grado) {
+    constructor(id, nombre, edad, grado, correo, telefono, direccion) {
         this.id = id;
         this.nombre = nombre;
         this.edad = edad;
         this.grado = grado;
+        this.correo = correo; // Nuevo atributo: Correo electrónico
+        this.telefono = telefono; // Nuevo atributo: Teléfono
+        this.direccion = direccion; // Nuevo atributo: Dirección
     }
 }
 
@@ -36,8 +39,8 @@ const profesores = [];
 const personalAdministrativo = [];
 
 app.post('/registrarEstudiante', (req, res) => {
-    const { nombre, edad, grado } = req.body;
-    const nuevoEstudiante = new Estudiante(uuidv4(), nombre, edad, grado); // Asignar un ID único
+    const { nombre, edad, grado, correo, telefono, direccion } = req.body;
+    const nuevoEstudiante = new Estudiante(uuidv4(), nombre, edad, grado, correo, telefono, direccion); // Asignar un ID único
     estudiantes.push(nuevoEstudiante);
 
     // Guardar la lista actualizada de estudiantes en el archivo
@@ -68,7 +71,7 @@ app.get('/obtenerEstudiante/:id', (req, res) => {
 
 app.put('/actualizarEstudiante/:id', (req, res) => {
     const id = req.params.id; // Obtener el ID del estudiante de la URL
-    const { nombre, edad, grado } = req.body; // Obtener los datos actualizados del cuerpo de la solicitud
+    const { nombre, edad, grado, correo, telefono, direccion } = req.body; // Obtener los datos actualizados del cuerpo de la solicitud
 
     // Buscar el índice del estudiante en el array
     const indiceEstudiante = estudiantes.findIndex(estudiante => estudiante.id === id);
@@ -78,7 +81,7 @@ app.put('/actualizarEstudiante/:id', (req, res) => {
     }
 
     // Actualizar los datos del estudiante
-    estudiantes[indiceEstudiante] = { id, nombre, edad, grado }; // Actualizar el estudiante en el array
+    estudiantes[indiceEstudiante] = { id, nombre, edad, grado, correo, telefono, direccion }; // Actualizar el estudiante en el array
 
     // Guardar la lista actualizada de estudiantes en el archivo
     guardarDatosEnArchivo(estudiantes, 'estudiantes.json'); // Llamar a la función para guardar los datos en el archivo
@@ -119,7 +122,7 @@ function leerDatosDesdeArchivo(nombreArchivo) {
         return JSON.parse(data);
     } catch (err) {
         // Si el archivo no existe o hay un error de lectura, devuelve un arreglo vacío
-        return [];
+        return;
     }
 }
 

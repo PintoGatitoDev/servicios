@@ -1,14 +1,11 @@
 [
   {
-    "id": "89b06bac-b000-465a-8024-314e7c6ba5ae",
-    "nombre": "Pepe",
-    "edad": "43",
-    "grado": "23"
-  },
-  {
-    "id": "cde1f105-6e27-443a-8b8b-1cdb5cb8764b",
-    "nombre": "sad",
+    "id": "0eb1f021-9b50-4992-a5a0-fff75ddbf138",
+    "nombre": "as",
     "edad": "12",
-    "grado": "21"
+    "grado": "12",
+    "correo": "asd@gmail.com",
+    "telefono": "345345",
+    "direccion": "234234"
   }
 ]
