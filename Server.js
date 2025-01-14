@@ -18,7 +18,8 @@ app.use(cors());
 
 /* Módulo de Gestión Académica */
 
-// Registro y gestión de estudiantes, profesores y personal administrativo.
+// --- Clases ---
+
 class Estudiante {
     constructor(id, nombre, edad, grado, correo, telefono, direccion) {
         this.id = id;
@@ -55,10 +56,41 @@ class PersonalAdministrativo {
     }
 }
 
-// Cargar archivos al servidor
+class PlanEstudio {
+    constructor(id, nombre, descripcion, grupos) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.grupos = grupos || [];
+    }
+}
+
+class Asignatura {
+    constructor(id, nombre, descripcion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
+}
+
+class Grupo {
+    constructor(id, asignatura, profesor, horario) {
+        this.id = id;
+        this.asignatura = asignatura;
+        this.profesor = profesor;
+        this.horario = horario || [];
+    }
+}
+
+// --- Cargar datos desde archivos ---
+
 const estudiantes = leerDatosDesdeArchivo('estudiantes.json');
 const profesores = leerDatosDesdeArchivo('profesores.json');
 const personalAdministrativo = leerDatosDesdeArchivo('personalAdministrativo.json');
+const planesEstudio = leerDatosDesdeArchivo('planesEstudio.json');
+const asignaturas = leerDatosDesdeArchivo('asignaturas.json');
+
+// --- Rutas ---
 
 // --- Estudiantes ---
 
@@ -166,7 +198,7 @@ app.post('/registrarPersonalAdministrativo', (req, res) => {
 
 app.get('/obtenerPersonalAdministrativo', (req, res) => {
     const personal = leerDatosDesdeArchivo('personalAdministrativo.json');
-    res.json({ personal }); 
+    res.json({ personal });
 });
 
 app.get('/obtenerPersonalAdministrativo/:id', (req, res) => {
@@ -201,41 +233,237 @@ app.delete('/eliminarPersonalAdministrativo/:id', (req, res) => {
     res.json({ message: 'Personal administrativo eliminado exitosamente' });
 });
 
+// --- Planes de Estudio ---
+
+app.post('/crearPlanEstudio', (req, res) => {
+    const { nombre, descripcion } = req.body;
+    const nuevoPlan = new PlanEstudio(uuidv4(), nombre, descripcion);
+    planesEstudio.push(nuevoPlan);
+    guardarDatosEnArchivo(planesEstudio, 'planesEstudio.json');
+    res.json({ message: 'Plan de estudio creado exitosamente', id: nuevoPlan.id });
+});
+
+app.get('/obtenerPlanesEstudio', (req, res) => {
+    const planes = leerDatosDesdeArchivo('planesEstudio.json');
+    res.json({ planes });
+});
+
+app.get('/obtenerPlanEstudio/:id', (req, res) => {
+    const id = req.params.id;
+    const plan = planesEstudio.find(plan => plan.id == id);
+    if (!plan) {
+        return res.status(404).json({ error: 'Plan de estudio no encontrado' });
+    }
+    res.json({ plan });
+});
+
+app.put('/actualizarPlanEstudio/:id', (req, res) => {
+    const id = req.params.id;
+    const { nombre, descripcion } = req.body;
+    const indicePlan = planesEstudio.findIndex(plan => plan.id === id);
+    if (indicePlan === -1) {
+        return res.status(404).json({ error: 'Plan de estudio no encontrado' });
+    }
+    planesEstudio[indicePlan] = { id, nombre, descripcion };
+    guardarDatosEnArchivo(planesEstudio, 'planesEstudio.json');
+    res.json({ message: 'Plan de estudio actualizado exitosamente' });
+});
+
+app.delete('/eliminarPlanEstudio/:id', (req, res) => {
+    const id = req.params.id;
+    const indicePlan = planesEstudio.findIndex(plan => plan.id === id);
+    if (indicePlan === -1) {
+        return res.status(404).json({ error: 'Plan de estudio no encontrado' });
+    }
+    planesEstudio.splice(indicePlan, 1);
+    guardarDatosEnArchivo(planesEstudio, 'planesEstudio.json');
+    res.json({ message: 'Plan de estudio eliminado exitosamente' });
+});
+
+// --- Asignaturas ---
+
+// Obtener todas las asignaturas
+app.get('/obtenerAsignaturas', (req, res) => {
+    const asignaturas = leerDatosDesdeArchivo('asignaturas.json');
+    res.json({ asignaturas });
+});
+
+// Crear una nueva asignatura
+app.post('/crearAsignatura', (req, res) => {
+    const { nombre, descripcion } = req.body;
+    const nuevaAsignatura = new Asignatura(uuidv4(), nombre, descripcion);
+    asignaturas.push(nuevaAsignatura);
+    guardarDatosEnArchivo(asignaturas, 'asignaturas.json');
+    res.json({ message: 'Asignatura creada exitosamente', id: nuevaAsignatura.id });
+});
+
+// Obtener una asignatura por su ID
+app.get('/obtenerAsignatura/:id', (req, res) => {
+    const id = req.params.id;
+    const asignatura = asignaturas.find(asignatura => asignatura.id === id);
+    if (!asignatura) {
+        return res.status(404).json({ error: 'Asignatura no encontrada' });
+    }
+    res.json({ asignatura });
+});
+
+// Actualizar una asignatura
+app.put('/actualizarAsignatura/:id', (req, res) => {
+    const id = req.params.id;
+    const { nombre, descripcion } = req.body;
+    const indiceAsignatura = asignaturas.findIndex(asignatura => asignatura.id === id);
+    if (indiceAsignatura === -1) {
+        return res.status(404).json({ error: 'Asignatura no encontrada' });
+    }
+    asignaturas[indiceAsignatura] = { id, nombre, descripcion };
+    guardarDatosEnArchivo(asignaturas, 'asignaturas.json');
+    res.json({ message: 'Asignatura actualizada exitosamente' });
+});
+
+// Eliminar una asignatura
+app.delete('/eliminarAsignatura/:id', (req, res) => {
+    const id = req.params.id;
+    const indiceAsignatura = asignaturas.findIndex(asignatura => asignatura.id === id);
+    if (indiceAsignatura === -1) {
+        return res.status(404).json({ error: 'Asignatura no encontrada' });
+    }
+    asignaturas.splice(indiceAsignatura, 1);
+    guardarDatosEnArchivo(asignaturas, 'asignaturas.json');
+    res.json({ message: 'Asignatura eliminada exitosamente' });
+});
+
+// --- Grupos ---
+
+// Crear un nuevo grupo dentro de un plan de estudio
+app.post('/crearGrupo/:planId', (req, res) => {
+    const planId = req.params.planId;
+    const { asignatura, profesor, horario } = req.body;
+
+    const plan = planesEstudio.find(plan => plan.id === planId);
+    if (!plan) {
+        return res.status(404).json({ error: 'Plan de estudio no encontrado' });
+    }
+
+    const nuevoGrupo = new Grupo(uuidv4(), asignatura, profesor, horario);
+    plan.grupos.push(nuevoGrupo);
+    guardarDatosEnArchivo(planesEstudio, 'planesEstudio.json');
+
+    res.json({ message: 'Grupo creado exitosamente', id: nuevoGrupo.id });
+});
+
+// Obtener todos los grupos de un plan de estudio
+app.get('/obtenerGrupos/:planId', (req, res) => {
+    const planId = req.params.planId;
+    const plan = planesEstudio.find(plan => plan.id === planId);
+    if (!plan) {
+        return res.status(404).json({ error: 'Plan de estudio no encontrado' });
+    }
+    res.json({ grupos: plan.grupos });
+});
+
+// Obtener un grupo por su ID
+app.get('/obtenerGrupo/:id', (req, res) => {
+    const id = req.params.id;
+    let grupoEncontrado = null;
+
+    for (const plan of planesEstudio) {
+        const grupo = plan.grupos.find(g => g.id === id);
+        if (grupo) {
+            grupoEncontrado = grupo;
+            break;
+        }
+    }
+
+    if (!grupoEncontrado) {
+        return res.status(404).json({ error: 'Grupo no encontrado' });
+    }
+
+    res.json({ grupo: grupoEncontrado });
+});
+
+// Actualizar un grupo
+app.put('/actualizarGrupo/:id', (req, res) => {
+    const id = req.params.id;
+    const { asignatura, profesor, horario } = req.body;
+
+    let grupoEncontrado = null;
+
+    for (const plan of planesEstudio) {
+        const indiceGrupo = plan.grupos.findIndex(g => g.id === id);
+        if (indiceGrupo !== -1) {
+            plan.grupos[indiceGrupo] = { id, asignatura, profesor, horario };
+            grupoEncontrado = plan.grupos[indiceGrupo];
+            break;
+        }
+    }
+
+    if (!grupoEncontrado) {
+        return res.status(404).json({ error: 'Grupo no encontrado' });
+    }
+
+    guardarDatosEnArchivo(planesEstudio, 'planesEstudio.json');
+    res.json({ message: 'Grupo actualizado exitosamente'});
+});
+
+// Eliminar un grupo
+app.delete('/eliminarGrupo/:id', (req, res) => {
+const id = req.params.id;
+
+let grupoEliminado = false;
+
+for (const plan of planesEstudio) {
+    const indiceGrupo = plan.grupos.findIndex(g => g.id === id);
+    if (indiceGrupo !== -1) {
+        plan.grupos.splice(indiceGrupo, 1);
+        grupoEliminado = true;
+        break;
+    }
+}
+
+if (!grupoEliminado) {
+    return res.status(404).json({ error: 'Grupo no encontrado' });
+}
+
+guardarDatosEnArchivo(planesEstudio, 'planesEstudio.json');
+res.json({ message: 'Grupo eliminado exitosamente' });
+
+});
+
 // --- Funciones auxiliares ---
 
 // Guardar datos en archivo JSON
 function guardarDatosEnArchivo(datos, nombreArchivo) {
-    const jsonData = JSON.stringify(datos, null, 2);
-    fs.writeFileSync(nombreArchivo, jsonData);
+const jsonData = JSON.stringify(datos, null, 2);
+fs.writeFileSync(nombreArchivo, jsonData);
 }
 
-// Función para leer datos desde un archivo JSON (corregida)
+// Función para leer datos desde un archivo JSON
 function leerDatosDesdeArchivo(nombreArchivo) {
-    try {
-        const data = fs.readFileSync(nombreArchivo, 'utf8');
-        return JSON.parse(data);
-    } catch (err) {
-        return [];
-    }
+try {
+const data = fs.readFileSync(nombreArchivo, 'utf8');
+return JSON.parse(data);
+} catch (err) {
+return [];
+}
 }
 
 /* Servicio SOAP */
 const service = {
-    SumService: {
-        SumServicePort: {
-            addNumbers: (args) => {
-                const num1 = parseFloat(args.number1);
-                const num2 = parseFloat(args.number2);
-                return { result: num1 + num2 };
-            },
-        },
-    },
+SumService: {
+SumServicePort: {
+addNumbers: (args) => {
+const num1 = parseFloat(args.number1);
+const num2 = parseFloat(args.number2);
+return { result: num1 + num2 };
+},
+},
+},
 };
 
 const server = http.createServer(app);
 soap.listen(server, '/wsdl', service, xml);
 
 server.listen(port, () => {
-    console.log(`Servidor REST corriendo en http://${IP}:${port}`);
-    console.log(`Servicio SOAP corriendo en http://${IP}:${port}/wsdl?wsdl`);
+console.log(`Servidor REST corriendo en http://${IP}:${port}`);
+console.log(`Servicio SOAP corriendo en http://${IP}:${port}/wsdl?wsdl`);
 });

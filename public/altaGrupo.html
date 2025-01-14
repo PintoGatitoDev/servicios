@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alta de Grupo - TICS Globals</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>TICS Globals</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li>
+          <a href="#">Estudiantes</a> 
+          <ul class="submenu">
+            <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+            <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Profesores</a> 
+          <ul class="submenu">
+            <li><a href="profesores.html">Ver Profesores</a></li>
+            <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Personal Administrativo</a>
+          <ul class="submenu">
+            <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+            <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Planes de Estudio</a>
+          <ul class="submenu">
+            <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+            <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Asignaturas</a>
+          <ul class="submenu">
+            <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+            <li><a href="altaAsignatura.html">Alta Asignatura</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Horarios</a></li> 
+      </ul>
+    </nav>
+  </header>
+
+<div class="main-section">
+  <div>
+    <h2>Crear Grupo</h2>
+    <form id="crearGrupoForm">
+      <label for="asignatura">Asignatura:</label>
+      <input type="text" id="asignatura" placeholder="ID de la asignatura" required><br>
+      <label for="profesor">Profesor:</label>
+      <input type="text" id="profesor" placeholder="ID del profesor" required><br>
+      <label for="horario">Horario:</label>
+      <textarea id="horario" placeholder="Horario del grupo (formato JSON)"></textarea><br>
+      <button type="submit">Crear</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Obtener el ID del plan de estudio de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const planId = urlParams.get('planId');
+
+  // Manejar el formulario de creación de grupo
+  const crearGrupoForm = document.getElementById('crearGrupoForm');
+  if (crearGrupoForm) {
+    crearGrupoForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const asignatura = document.getElementById('asignatura').value;
+      const profesor = document.getElementById('profesor').value;
+      const horario = JSON.parse(document.getElementById('horario').value); // Convertir el texto a JSON
+
+      try {
+        const response = await fetch(`http://localhost:3000/crearGrupo/${planId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ asignatura, profesor, horario }),
+        });
+
+        if (response.ok) {
+          alert('Grupo creado exitosamente');
+          crearGrupoForm.reset();
+          window.location.href = `grupos.html?planId=${planId}`;
+        } else {
+          alert('Error al crear el grupo');
+        }
+      } catch (error) {
+        console.error('Error al crear el grupo:', error);
+        alert('Error al crear el grupo');
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

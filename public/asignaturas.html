@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gestionar Asignaturas - TICS Globals</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+
+<header>
+  <h1>TICS Globals</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li>
+        <a href="#">Estudiantes</a> 
+        <ul class="submenu">
+          <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+          <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Profesores</a> 
+        <ul class="submenu">
+          <li><a href="profesores.html">Ver Profesores</a></li>
+          <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Personal Administrativo</a>
+        <ul class="submenu">
+          <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+          <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+        </ul>
+      </li>
+      <li><a href="planesEstudio.html">Planes de Estudio</a></li>
+      <li>
+        <a href="#">Asignaturas</a>
+        <ul class="submenu">
+          <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+          <li><a href="altaAsignatura.html">Alta Asignatura</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Horarios</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="main-section">
+  <div>
+    <h2>Lista de Asignaturas</h2>
+
+    <a href="altaAsignatura.html">
+      <button class="add-button">Crear nueva asignatura</button>
+    </a>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="listaAsignaturas"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="scripts.js"></script>
+<script>
+  // Función para obtener la lista de asignaturas del servidor
+  async function obtenerAsignaturas() {
+    try {
+      const response = await fetch('http://localhost:3000/obtenerAsignaturas');
+      if (!response.ok) {
+        throw new Error('Error al obtener la lista de asignaturas');
+      }
+      const data = await response.json();
+
+      const listaAsignaturas = document.getElementById('listaAsignaturas');
+      listaAsignaturas.innerHTML = '';
+
+      data.asignaturas.forEach(asignatura => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${asignatura.id}</td>
+          <td>${asignatura.nombre}</td>
+          <td>${asignatura.descripcion}</td>
+          <td>
+            <a href="editarAsignatura.html?id=${asignatura.id}"><button>Editar</button></a>
+            <button onclick="eliminarAsignatura('${asignatura.id}')">Eliminar</button>
+          </td>
+        `;
+        listaAsignaturas.appendChild(row);
+      });
+
+    } catch (error) {
+      console.error('Error al obtener la lista de asignaturas:', error);
+      alert('Error al obtener la lista de asignaturas');
+    }
+  }
+
+  // Función para eliminar una asignatura
+  async function eliminarAsignatura(id) {
+    if (confirm('¿Estás seguro de que quieres eliminar esta asignatura?')) {
+      try {
+        const response = await fetch(`http://localhost:3000/eliminarAsignatura/${id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          alert('Asignatura eliminada exitosamente');
+          obtenerAsignaturas(); // Actualizar la lista de asignaturas
+        } else {
+          alert('Error al eliminar la asignatura');
+        }
+      } catch (error) {
+        console.error('Error al eliminar la asignatura:', error);
+        alert('Error al eliminar la asignatura');
+      }
+    }
+  }
+
+  // Llamar a la función para obtener la lista de asignaturas al cargar la página
+  obtenerAsignaturas();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gestionar Planes de Estudio - TICS Globals</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+
+<header>
+  <h1>TICS Globals</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li>
+        <a href="#">Estudiantes</a> 
+        <ul class="submenu">
+          <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+          <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Profesores</a> 
+        <ul class="submenu">
+          <li><a href="profesores.html">Ver Profesores</a></li>
+          <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Personal Administrativo</a>
+        <ul class="submenu">
+          <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+          <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Planes de Estudio</a>
+        <ul class="submenu">
+          <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+          <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
+        </ul>
+      </li>
+      <li><a href="asignaturas.html">Asignaturas</a></li>
+      <li><a href="#">Horarios</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="main-section">
+  <div>
+    <h2>Lista de Planes de Estudio</h2>
+
+    <a href="altaPlanEstudio.html">
+      <button class="add-button">Crear nuevo plan de estudio</button>
+    </a>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="listaPlanesEstudio"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="scripts.js"></script>
+<script>
+  // Función para obtener la lista de planes de estudio del servidor
+  async function obtenerPlanesEstudio() {
+    try {
+      const response = await fetch('http://localhost:3000/obtenerPlanesEstudio');
+      if (!response.ok) {
+        throw new Error('Error al obtener la lista de planes de estudio');
+      }
+      const data = await response.json();
+
+      const listaPlanes = document.getElementById('listaPlanesEstudio');
+      listaPlanes.innerHTML = '';
+
+      data.planes.forEach(plan => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${plan.id}</td>
+          <td>${plan.nombre}</td>
+          <td>${plan.descripcion}</td>
+          <td>
+            <a href="editarPlanEstudio.html?id=${plan.id}"><button>Editar</button></a>
+            <button onclick="eliminarPlanEstudio('${plan.id}')">Eliminar</button>
+            <a href="grupos.html?planId=${plan.id}"><button>Ver Grupos</button></a>
+          </td>
+        `;
+        listaPlanes.appendChild(row);
+      });
+
+    } catch (error) {
+      console.error('Error al obtener la lista de planes de estudio:', error);
+      alert('Error al obtener la lista de planes de estudio');
+    }
+  }
+
+  // Función para eliminar un plan de estudio
+  async function eliminarPlanEstudio(id) {
+    if (confirm('¿Estás seguro de que quieres eliminar este plan de estudio?')) {
+      try {
+        const response = await fetch(`http://localhost:3000/eliminarPlanEstudio/${id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          alert('Plan de estudio eliminado exitosamente');
+          obtenerPlanesEstudio(); // Actualizar la lista de planes de estudio
+        } else {
+          alert('Error al eliminar el plan de estudio');
+        }
+      } catch (error) {
+        console.error('Error al eliminar el plan de estudio:', error);
+        alert('Error al eliminar el plan de estudio');
+      }
+    }
+  }
+
+  // Llamar a la función para obtener la lista de planes de estudio al cargar la página
+  obtenerPlanesEstudio();
+</script>
+
+</body>
+</html>

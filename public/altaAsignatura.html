@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alta de Asignatura - TICS Globals</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>TICS Globals</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li>
+          <a href="#">Estudiantes</a> 
+          <ul class="submenu">
+            <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+            <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Profesores</a> 
+          <ul class="submenu">
+            <li><a href="profesores.html">Ver Profesores</a></li>
+            <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Personal Administrativo</a>
+          <ul class="submenu">
+            <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+            <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Planes de Estudio</a>
+          <ul class="submenu">
+            <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+            <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Asignaturas</a>
+          <ul class="submenu">
+            <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+            <li><a href="altaAsignatura.html">Alta Asignatura</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Horarios</a></li> 
+      </ul>
+    </nav>
+  </header>
+
+<div class="main-section">
+  <div>
+    <h2>Crear Asignatura</h2>
+    <form id="crearAsignaturaForm">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" placeholder="Nombre de la asignatura" required><br>
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" placeholder="Descripción de la asignatura"></textarea><br>
+      <button type="submit">Crear</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Manejar el formulario de creación de asignatura
+  const crearAsignaturaForm = document.getElementById('crearAsignaturaForm');
+  if (crearAsignaturaForm) {
+    crearAsignaturaForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const nombre = document.getElementById('nombre').value;
+      const descripcion = document.getElementById('descripcion').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/crearAsignatura', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ nombre, descripcion }),
+        });
+
+        if (response.ok) {
+          alert('Asignatura creada exitosamente');
+          crearAsignaturaForm.reset();
+          window.location.href = 'asignaturas.html';
+        } else {
+          alert('Error al crear la asignatura');
+        }
+      } catch (error) {
+        console.error('Error al crear la asignatura:', error);
+        alert('Error al crear la asignatura');
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

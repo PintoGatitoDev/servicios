@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Editar Grupo - TICS Globals</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>TICS Globals</h1>
+        <nav>
+          <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li>
+              <a href="#">Estudiantes</a> 
+              <ul class="submenu">
+                <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+                <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Profesores</a> 
+              <ul class="submenu">
+                <li><a href="profesores.html">Ver Profesores</a></li>
+                <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Personal Administrativo</a>
+              <ul class="submenu">
+                <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+                <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Planes de Estudio</a>
+              <ul class="submenu">
+                <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+                <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Asignaturas</a>
+              <ul class="submenu">
+                <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+                <li><a href="altaAsignatura.html">Alta Asignatura</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Horarios</a></li> 
+          </ul>
+        </nav>
+      </header>
+
+    <div class="main-section">
+        <div>
+            <h2>Editar Grupo</h2>
+            <form id="editarGrupoForm">
+                <input type="hidden" id="idGrupo">
+                <label for="asignatura">Asignatura:</label>
+                <input type="text" id="asignatura" placeholder="ID de la asignatura" required><br>
+                <label for="profesor">Profesor:</label>
+                <input type="text" id="profesor" placeholder="ID del profesor" required><br>
+                <label for="horario">Horario:</label>
+                <textarea id="horario" placeholder="Horario del grupo (formato JSON)"></textarea><br>
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+    <script>
+        // Obtener el ID del grupo de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const idGrupo = urlParams.get('id');
+
+        // Llenar el formulario con los datos del grupo
+        if (idGrupo) {
+            fetch(`http://localhost:3000/obtenerGrupo/${idGrupo}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al obtener los datos del grupo');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('idGrupo').value = data.grupo.id;
+                    document.getElementById('asignatura').value = data.grupo.asignatura;
+                    document.getElementById('profesor').value = data.grupo.profesor;
+                    document.getElementById('horario').value = JSON.stringify(data.grupo.horario); // Convertir el JSON a texto
+                })
+                .catch(error => {
+                    console.error('Error al obtener los datos del grupo:', error);
+                    alert('Error al obtener los datos del grupo');
+                });
+        }
+
+        // Manejar el formulario de edición de grupo
+        const editarGrupoForm = document.getElementById('editarGrupoForm');
+        if (editarGrupoForm) {
+            editarGrupoForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const id = document.getElementById('idGrupo').value;
+                const asignatura = document.getElementById('asignatura').value;
+                const profesor = document.getElementById('profesor').value;
+                const horario = JSON.parse(document.getElementById('horario').value); // Convertir el texto a JSON
+
+                try {
+                    const response = await fetch(`http://localhost:3000/actualizarGrupo/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ asignatura, profesor, horario }),
+                    });
+
+                    if (response.ok) {
+                        alert('Grupo actualizado exitosamente');
+                        window.location.href = 'planesEstudio.html';
+                    } else {
+                        alert('Error al actualizar el grupo');
+                    }
+                } catch (error) {
+                    console.error('Error al actualizar el grupo:', error);
+                    alert('Error al actualizar el grupo');
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>

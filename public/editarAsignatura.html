@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Editar Asignatura - TICS Globals</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>TICS Globals</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li>
+          <a href="#">Estudiantes</a> 
+          <ul class="submenu">
+            <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+            <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Profesores</a> 
+          <ul class="submenu">
+            <li><a href="profesores.html">Ver Profesores</a></li>
+            <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Personal Administrativo</a>
+          <ul class="submenu">
+            <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+            <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Planes de Estudio</a>
+          <ul class="submenu">
+            <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+            <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Asignaturas</a>
+          <ul class="submenu">
+            <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+            <li><a href="altaAsignatura.html">Alta Asignatura</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Horarios</a></li> 
+      </ul>
+    </nav>
+  </header>
+
+<div class="main-section">
+  <div>
+    <h2>Editar Asignatura</h2>
+    <form id="editarAsignaturaForm">
+      <input type="hidden" id="idAsignatura">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" placeholder="Nombre de la asignatura" required><br>
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" placeholder="Descripción de la asignatura"></textarea><br>
+      <button type="submit">Guardar Cambios</button>
+    </form>
+  </div>
+</div>
+
+<script src="scripts.js"></script>
+<script>
+  // Obtener el ID de la asignatura de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const idAsignatura = urlParams.get('id');
+
+  // Llenar el formulario con los datos de la asignatura
+  if (idAsignatura) {
+    fetch(`http://localhost:3000/obtenerAsignatura/${idAsignatura}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al obtener los datos de la asignatura');
+        }
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById('idAsignatura').value = data.asignatura.id;
+        document.getElementById('nombre').value = data.asignatura.nombre;
+        document.getElementById('descripcion').value = data.asignatura.descripcion;
+      })
+      .catch(error => {
+        console.error('Error al obtener los datos de la asignatura:', error);
+        alert('Error al obtener los datos de la asignatura');
+      });
+  }
+
+  // Manejar el formulario de edición de asignatura
+  const editarAsignaturaForm = document.getElementById('editarAsignaturaForm');
+  if (editarAsignaturaForm) {
+    editarAsignaturaForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const id = document.getElementById('idAsignatura').value;
+      const nombre = document.getElementById('nombre').value;
+      const descripcion = document.getElementById('descripcion').value;
+
+      try {
+        const response = await fetch(`http://localhost:3000/actualizarAsignatura/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ nombre, descripcion }),
+        });
+
+        if (response.ok) {
+          alert('Asignatura actualizada exitosamente');
+          window.location.href = 'asignaturas.html';
+        } else {
+          alert('Error al actualizar la asignatura');
+        }
+      } catch (error) {
+        console.error('Error al actualizar la asignatura:', error);
+        alert('Error al actualizar la asignatura');
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

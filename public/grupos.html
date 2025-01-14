@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gestionar Grupos - TICS Globals</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>TICS Globals</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li>
+          <a href="#">Estudiantes</a> 
+          <ul class="submenu">
+            <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+            <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Profesores</a> 
+          <ul class="submenu">
+            <li><a href="profesores.html">Ver Profesores</a></li>
+            <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Personal Administrativo</a>
+          <ul class="submenu">
+            <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+            <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Planes de Estudio</a>
+          <ul class="submenu">
+            <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+            <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Asignaturas</a>
+          <ul class="submenu">
+            <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+            <li><a href="altaAsignatura.html">Alta Asignatura</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Horarios</a></li> 
+      </ul>
+    </nav>
+  </header>
+
+<div class="main-section">
+  <div>
+    <h2>Lista de Grupos</h2>
+
+    <a href="altaGrupo.html">
+      <button class="add-button">Crear nuevo grupo</button>
+    </a>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Asignatura</th>
+          <th>Profesor</th>
+          <th>Horario</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="listaGrupos"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="scripts.js"></script>
+<script>
+  // Obtener el ID del plan de estudio de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const planId = urlParams.get('planId');
+
+  // Función para obtener la lista de grupos del servidor
+  async function obtenerGrupos(planId) {
+    try {
+      const response = await fetch(`http://localhost:3000/obtenerGrupos/${planId}`);
+      if (!response.ok) {
+        throw new Error('Error al obtener la lista de grupos');
+      }
+      const data = await response.json();
+
+      const listaGrupos = document.getElementById('listaGrupos');
+      listaGrupos.innerHTML = '';
+
+      data.grupos.forEach(grupo => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${grupo.id}</td>
+          <td>${grupo.asignatura}</td>
+          <td>${grupo.profesor}</td>
+          <td>${JSON.stringify(grupo.horario)}</td>
+          <td>
+            <a href="editarGrupo.html?id=${grupo.id}"><button>Editar</button></a>
+            <button onclick="eliminarGrupo('${grupo.id}')">Eliminar</button>
+          </td>
+        `;
+        listaGrupos.appendChild(row);
+      });
+
+    } catch (error) {
+      console.error('Error al obtener la lista de grupos:', error);
+      alert('Error al obtener la lista de grupos');
+    }
+  }
+
+  // Función para eliminar un grupo
+  async function eliminarGrupo(id) {
+    if (confirm('¿Estás seguro de que quieres eliminar este grupo?')) {
+      try {
+        const response = await fetch(`http://localhost:3000/eliminarGrupo/${id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          alert('Grupo eliminado exitosamente');
+          obtenerGrupos(planId); // Actualizar la lista de grupos
+        } else {
+          alert('Error al eliminar el grupo');
+        }
+      } catch (error) {
+        console.error('Error al eliminar el grupo:', error);
+        alert('Error al eliminar el grupo');
+      }
+    }
+  }
+
+  // Llamar a la función para obtener la lista de grupos al cargar la página
+  if (planId) {
+    obtenerGrupos(planId);
+  }
+</script>
+
+</body>
+</html>
