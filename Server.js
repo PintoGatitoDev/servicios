@@ -29,6 +29,7 @@ class Estudiante {
         this.correo = correo;
         this.telefono = telefono;
         this.direccion = direccion;
+        this.calificaciones = []; 
     }
 }
 
@@ -95,8 +96,12 @@ const asignaturas = leerDatosDesdeArchivo('asignaturas.json');
 // --- Estudiantes ---
 
 app.post('/registrarEstudiante', (req, res) => {
-    const { nombre, edad, grado, correo, telefono, direccion } = req.body;
+    const { nombre, edad, grado, correo, telefono, direccion, calificaciones } = req.body;
     const nuevoEstudiante = new Estudiante(uuidv4(), nombre, edad, grado, correo, telefono, direccion);
+    if (calificaciones && Array.isArray(calificaciones)) {
+        nuevoEstudiante.calificaciones = calificaciones;
+    }
+
     estudiantes.push(nuevoEstudiante);
     guardarDatosEnArchivo(estudiantes, 'estudiantes.json');
     res.json({ message: 'Estudiante registrado exitosamente' });
@@ -118,12 +123,12 @@ app.get('/obtenerEstudiante/:id', (req, res) => {
 
 app.put('/actualizarEstudiante/:id', (req, res) => {
     const id = req.params.id;
-    const { nombre, edad, grado, correo, telefono, direccion } = req.body;
+    const { nombre, edad, grado, correo, telefono, direccion, calificaciones } = req.body;
     const indiceEstudiante = estudiantes.findIndex(estudiante => estudiante.id === id);
     if (indiceEstudiante === -1) {
         return res.status(404).json({ error: 'Estudiante no encontrado' });
     }
-    estudiantes[indiceEstudiante] = { id, nombre, edad, grado, correo, telefono, direccion };
+    estudiantes[indiceEstudiante] = { id, nombre, edad, grado, correo, telefono, direccion, calificaciones, calificaciones };
     guardarDatosEnArchivo(estudiantes, 'estudiantes.json');
     res.json({ message: 'Estudiante actualizado exitosamente' });
 });
@@ -449,15 +454,20 @@ return [];
 
 /* Servicio SOAP */
 const service = {
-SumService: {
-SumServicePort: {
-addNumbers: (args) => {
-const num1 = parseFloat(args.number1);
-const num2 = parseFloat(args.number2);
-return { result: num1 + num2 };
-},
-},
-},
+    GestionAcademicaService: {
+        GestionAcademicaServicePort: {
+            consultarCalificaciones: (args) => {
+                const idEstudiante = args.idEstudiante;
+                const estudiantes = leerDatosDesdeArchivo('estudiantes.json');
+                const estudiante = estudiantes.find(est => est.id === idEstudiante);
+                if (estudiante) {
+                    return { calificaciones: estudiante.calificaciones };
+                } else {
+                    return { calificaciones: [] };
+                }
+            },
+        },
+    },
 };
 
 const server = http.createServer(app);

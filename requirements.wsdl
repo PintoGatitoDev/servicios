@@ -1,27 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-             xmlns:tns="http://example.com/sumService"
+             xmlns:tns="http://example.com/Educacion"
              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-             targetNamespace="http://example.com/sumService"
+             targetNamespace="http://example.com/Educacion"
              name="SumService">
-    <message name="addNumbersRequest">
-        <part name="number1" type="xsd:float"/>
-        <part name="number2" type="xsd:float"/>
+    <types>
+        <xsd:schema targetNamespace="http://example.com/Educacion">
+            <xsd:element name="consultarCalificaciones">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="idEstudiante" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="consultarCalificacionesResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="calificaciones" type="tns:ArrayOfCalificacion"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:complexType name="Calificacion">
+                <xsd:sequence>
+                    <xsd:element name="materia" type="xsd:string"/>
+                    <xsd:element name="nota" type="xsd:double"/>
+                </xsd:sequence>
+            </xsd:complexType
+>
+            <xsd:complexType name="ArrayOfCalificacion">
+               <xsd:sequence>
+                 <xsd:element name="calificacion" type="tns:Calificacion" minOccurs="0" maxOccurs="unbounded"/>
+               </xsd:sequence>
+             </xsd:complexType>
+        </xsd:schema>
+    </types>
+
+    <message name="consultarCalificacionesRequest">
+        <part element="tns:consultarCalificaciones" name="parameters"/>
     </message>
-    <message name="addNumbersResponse">
-        <part name="result" type="xsd:float"/>
+    <message name="consultarCalificacionesResponse">
+        <part element="tns:consultarCalificacionesResponse" name="parameters"/>
     </message>
-    <portType name="SumServicePort">
-        <operation name="addNumbers">
-            <input message="tns:addNumbersRequest"/>
-            <output message="tns:addNumbersResponse"/>
+
+    <portType name="GestionAcademicaPortType">
+        <operation name="consultarCalificaciones">
+            <input message="tns:consultarCalificacionesRequest"/>
+            <output message="tns:consultarCalificacionesResponse"/>
         </operation>
     </portType>
-    <binding name="SumServiceBinding" type="tns:SumServicePort">
+    <binding name="GestionAcademicaBinding" type="tns:GestionAcademicaPortType">
         <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="addNumbers">
-            <soap:operation soapAction="addNumbers"/>
+        <operation name="consultarCalificaciones">
+            <soap:operation soapAction="consultarCalificaciones"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -30,9 +61,9 @@
             </output>
         </operation>
     </binding>
-    <service name="SumService">
-        <port name="SumServicePort" binding="tns:SumServiceBinding">
-            <soap:address location="http://192.168.3.86:3000/wsdl"/>
+    <service name="GestionAcademicaService">
+        <port name="GestionAcademicaServicePort" binding="tns:GestionAcademicaBinding">
+            <soap:address location="http://localhost:3000/wsdl"/>
         </port>
     </service>
 </definitions>
