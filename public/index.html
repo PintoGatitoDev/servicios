@@ -1,87 +1,128 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>TICS Globals - Bienvenido</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-  </head>
-  <body>
-    <header>
-      <h1>TICS Globals</h1>
-      <nav>
-        <ul id="menu">
-          <li><a href="index.html">Inicio</a></li>
-          <li class="auth-estudiante auth-personalAdministrativo">
-            <a href="#">Estudiantes</a> 
-            <ul class="submenu">
-              <li><a href="estudiantes.html">Ver Estudiantes</a></li>
-              <li><a href="altaEstudiantes.html" class="auth-personalAdministrativo">Alta de Estudiantes</a></li>
-            </ul>
-          </li>
-          <li class="auth-all">
-            <a href="#">Profesores</a> 
-            <ul class="submenu">
-              <li><a href="profesores.html">Ver Profesores</a></li>
-              <li><a href="altaProfesores.html" class="auth-personalAdministrativo">Alta de Profesores</a></li>
-            </ul>
-          </li>
-          <li class="auth-personalAdministrativo">
-            <a href="#">Personal Administrativo</a>
-            <ul class="submenu">
-              <li><a href="personalAdministrativo.html">Ver Personal</a></li>
-              <li><a href="altaPersonalAdministrativo.html" class="auth-personalAdministrativo">Alta de Personal</a></li>
-            </ul>
-          </li>
-          <li class="auth-all"> 
-            <a href="#">Planes de Estudio</a>
-            <ul class="submenu">
-              <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
-              <li><a href="altaPlanEstudio.html" class="auth-personalAdministrativo">Alta Plan de Estudio</a></li>
-            </ul>
-          </li>
-          <li class="auth-all">
-            <a href="#">Asignaturas</a>
-            <ul class="submenu">
-              <li><a href="asignaturas.html">Ver Asignaturas</a></li>
-              <li><a href="altaAsignatura.html" class="auth-personalAdministrativo">Alta Asignatura</a></li>
-            </ul>
-          </li>
-          <li class="auth-all">
-            <a href="#">Grupos</a>
-            <ul class="submenu">
-              <li><a href="grupos.html">Ver Grupos</a></li>
-              <li><a href="altaGrupo.html" class="auth-personalAdministrativo">Alta de Grupo</a></li>
-            </ul>
-          </li>
-          <li class="auth-estudiante"><a href="moduloEstudiante.html">Módulo</a></li>
-          <li class="auth-none">
-            <a href="iniciarSesion.html" id="iniciarSesionBtn">Iniciar sesión</a>
-          </li>
-          <li class="auth-close">
-            <a href="#" id="cerrarSesionBtn">Cerrar sesión</a>
-          </li>
-        </ul>
-      </nav>
-    </header>
+<head>
+  <title>Sistema de Gestión Escolar - Bienvenido</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <style>
+    #mapa {
+      width: 600px;
+      height: 400px;
+    }
+  </style>
+</head>
 
-    <main>
-      <section>
-        <h2>Bienvenido a TICS Globals</h2>
-        <p>Somos una empresa líder en soluciones tecnológicas para la educación.</p>
-        <p>Nuestro sistema de gestión escolar te permite:</p>
-        <ul>
-          <li>Gestionar estudiantes, profesores y personal administrativo.</li>
-          <li>Crear y administrar planes de estudio, asignaturas y horarios.</li>
-          <li>Gestionar calificaciones y generar reportes académicos.</li>
-          <li>Realizar seguimiento del progreso académico de los estudiantes.</li>
-        </ul>
-      </section>
-    </main>
+<body>
+  <header>
+    <h1>Sistema de Gestión Escolar</h1>
+    <nav>
+      <ul id="menu">
+        <li><a href="index.html">Inicio</a></li>
+        <li class="auth-estudiante auth-personalAdministrativo">
+          <a href="#">Estudiantes</a>
+          <ul class="submenu">
+            <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+            <li><a href="altaEstudiantes.html" class="auth-personalAdministrativo">Alta de Estudiantes</a></li>
+          </ul>
+        </li>
+        <li class="auth-all">
+          <a href="#">Profesores</a>
+          <ul class="submenu">
+            <li><a href="profesores.html">Ver Profesores</a></li>
+            <li><a href="altaProfesores.html" class="auth-personalAdministrativo">Alta de Profesores</a></li>
+          </ul>
+        </li>
+        <li class="auth-personalAdministrativo">
+          <a href="#">Personal Administrativo</a>
+          <ul class="submenu">
+            <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+            <li><a href="altaPersonalAdministrativo.html" class="auth-personalAdministrativo">Alta de Personal</a>
+            </li>
+          </ul>
+        </li>
+        <li class="auth-all">
+          <a href="#">Planes de Estudio</a>
+          <ul class="submenu">
+            <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+            <li><a href="altaPlanEstudio.html" class="auth-personalAdministrativo">Alta Plan de Estudio</a></li>
+          </ul>
+        </li>
+        <li class="auth-all">
+          <a href="#">Asignaturas</a>
+          <ul class="submenu">
+            <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+            <li><a href="altaAsignatura.html" class="auth-personalAdministrativo">Alta Asignatura</a></li>
+          </ul>
+        </li>
+        <li class="auth-all">
+          <a href="#">Grupos</a>
+          <ul class="submenu">
+            <li><a href="grupos.html">Ver Grupos</a></li>
+            <li><a href="altaGrupo.html" class="auth-personalAdministrativo">Alta de Grupo</a></li>
+          </ul>
+        </li>
+        <li class="auth-estudiante"><a href="moduloEstudiante.html">Módulo</a></li>
+        <li class="auth-none">
+          <a href="iniciarSesion.html" id="iniciarSesionBtn">Iniciar sesión</a>
+        </li>
+        <li class="auth-close">
+          <a href="#" id="cerrarSesionBtn">Cerrar sesión</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
 
-    <footer>
-      <p>&copy; 2023 TICS Globals</p>
-    </footer>
+  <main>
+    <section>
+      <h2>Bienvenido al Sistema de Gestión Escolar</h2>
+      <p>Esta plataforma te permite gestionar de manera eficiente todos los aspectos académicos de tu escuela.</p>
+      <img src="https://img.freepik.com/vector-gratis/estudiantes-felices-aprendiendo-linea-aula_1262-20651.jpg?w=740&t=st=1699960474~exp=1699961074~hmac=2e73511926c437d8a21436708375835b7392973d8c6f1103631357501a2e477a"
+        alt="Imagen de estudiantes en un aula" width="400">
+      <p>Funcionalidades principales:</p>
+      <ul>
+        <li>Gestionar estudiantes, profesores y personal administrativo.</li>
+        <li>Crear y administrar planes de estudio, asignaturas y grupos.</li>
+        <li>Gestionar calificaciones y generar reportes académicos.</li>
+        <li>Facilitar la comunicación entre profesores, estudiantes y padres.</li>
+      </ul>
+    </section>
 
-    <script src="scripts.js"></script> 
-    <script src="auth.js"></script>
-  </body>
+    <section>
+      <h2>Contáctanos</h2>
+      <p>Si tienes alguna duda o necesitas ayuda con la plataforma, puedes contactarnos a través de los siguientes
+        medios:</p>
+      <ul>
+        <li>Teléfono: (55) 1234-5678</li>
+        <li>Correo electrónico: info@sistemaescolar.com</li>
+      </ul>
+      <div id="mapa"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Sistema de Gestión Escolar</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+  <script src="auth.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    // Verificar si la API de mapas está cargada correctamente
+    if (typeof L !== 'undefined') {
+      let mapa = L.map('mapa').setView([19.503658, -99.178171], 13);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(mapa);
+      L.marker([19.503658, -99.178171]).addTo(mapa)
+        .bindPopup('Ciudad de México')
+        .bindPopup('Sistema de Gestión Escolar')
+        .openPopup();
+    } else {
+      console.error('La API de mapas no se cargó correctamente.');
+      // Mostrar un mensaje de error al usuario o cargar la API de mapas de otra forma
+    }
+  </script>
+</body>
 </html>

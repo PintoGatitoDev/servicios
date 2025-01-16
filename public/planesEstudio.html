@@ -11,7 +11,7 @@
       <ul id="menu">
         <li><a href="index.html">Inicio</a></li>
         <li class="auth-estudiante auth-personalAdministrativo">
-          <a href="#">Estudiantes</a> 
+          <a href="#" class="auth-personalAdministrativo auth-profesor">Estudiantes</a> 
           <ul class="submenu">
             <li><a href="estudiantes.html">Ver Estudiantes</a></li>
             <li><a href="altaEstudiantes.html" class="auth-personalAdministrativo">Alta de Estudiantes</a></li>
@@ -45,6 +45,13 @@
             <li><a href="altaAsignatura.html" class="auth-personalAdministrativo">Alta Asignatura</a></li>
           </ul>
         </li>
+        <li class="auth-all">
+          <a href="#">Grupos</a>
+          <ul class="submenu">
+            <li><a href="grupos.html">Ver Grupos</a></li>
+            <li><a href="altaGrupo.html" class="auth-personalAdministrativo">Alta de Grupo</a></li>
+          </ul>
+        </li>
         <li class="auth-estudiante"><a href="moduloEstudiante.html">Módulo</a></li>
         <li class="auth-none">
           <a href="iniciarSesion.html" id="iniciarSesionBtn">Iniciar sesión</a>
@@ -60,7 +67,7 @@
   <div>
     <h2>Lista de Planes de Estudio</h2>
 
-    <a href="altaPlanEstudio.html">
+    <a href="altaPlanEstudio.html" class="auth-personalAdministrativo">
       <button class="add-button" class="auth-personalAdministrativo">Crear nuevo plan de estudio</button>
     </a>
 
@@ -100,12 +107,15 @@
           <td>${plan.nombre}</td>
           <td>${plan.descripcion}</td>
           <td>
-            <a href="editarPlanEstudio.html?id=${plan.id}" class="auth-personalAdministrativo"><button>Editar</button></a>
-            <a href="#" class="eliminar-plan" data-id="${plan.id}" class="auth-personalAdministrativo"><button>Eliminar</button></a>
+            <div class="auth-personalAdministrativo">
+              <a href="editarPlanEstudio.html?id=${plan.id}" ><button >Editar</button></a>
+              <a href="#" class="eliminar-plan" data-id="${plan.id}"><button>Eliminar</button></a>
+            </div>
             <a href="verAsignaturasPlan.html?id=${plan.id}"><button>Ver Asignaturas</button></a>
           </td>
         `;
         listaPlanes.appendChild(row);
+        actualizarMenu();
       });
 
     } catch (error) {

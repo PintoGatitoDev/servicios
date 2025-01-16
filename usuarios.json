@@ -22,5 +22,17 @@
     "nombreUsuario": "admin",
     "contrasena": "$2b$10$WE/IuJ6j1rP31FYeEroI/udCpHr7bG7pZ4RvUJstn0SHQ2Rf3AEo2",
     "rol": "personalAdministrativo"
+  },
+  {
+    "id": "7e0db4e0-8024-4296-8334-030b58aa059f",
+    "nombreUsuario": "juan",
+    "contrasena": "$2b$10$H8asnthqt.UXesoECeTu0eMsi1EtChAzcyY/NUuwfgxVJ3yjRosMO",
+    "rol": "estudiante"
+  },
+  {
+    "id": "a885980c-6ab6-4bd9-96e2-53f8f19b3b6c",
+    "nombreUsuario": "carlos",
+    "contrasena": "$2b$10$I4CKDxkzpr8lrdaF5/0P7uJ9L29abw06nDw39GpsqwR0LoNt0pRSC",
+    "rol": "profesor"
   }
 ]

@@ -57,6 +57,20 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="encriptarContrasena">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="constraseña" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="encriptarContrasenaResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="constraseñaResult" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xsd:schema>
     </types>
 
@@ -90,6 +104,12 @@
     <message name="getAsignaturasResponse">
         <part name="parameters" element="tns:getAsignaturasResponse"/>
     </message>
+    <message name="encriptarContrasenaRequest">
+        <part name="parameters" element="tns:encriptarContrasenaRequest"/>
+    </message>
+    <message name="encriptarContrasenaResponse">
+        <part name="parameters" element="tns:encriptarContrasenaResponse"/>
+    </message>
 
     <portType name="ServicioPortType">
         <operation name="getEstudiantes">
@@ -111,6 +131,10 @@
         <operation name="getAsignaturas">
             <input message="tns:getAsignaturasRequest"/>
             <output message="tns:getAsignaturasResponse"/>
+        </operation>
+        <operation name="encriptarContrasena">
+            <input message="tns:encriptarContrasenaRequest"/>
+            <output message="tns:encriptarContrasenaResponse"/>
         </operation>
     </portType>
     <binding name="GestionAcademicaBinding" type="tns:GestionAcademicaPortType">
@@ -153,6 +177,15 @@
         </operation>
          <operation name="getAsignaturas">
             <soap:operation soapAction="http://example.com/Educacion/getAsignaturas"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="encriptarContrasena">
+            <soap:operation soapAction="http://example.com/Educacion/encriptarContrasena"/>
             <input>
                 <soap:body use="literal"/>
             </input>

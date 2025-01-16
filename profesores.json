@@ -7,5 +7,14 @@
     "correo": "profesor@profesor.com",
     "telefono": "5435435435546",
     "direccion": "Calle 1213"
+  },
+  {
+    "id": "a885980c-6ab6-4bd9-96e2-53f8f19b3b6c",
+    "nombre": "carlos",
+    "edad": "22",
+    "especialidad": "Matematicas",
+    "correo": "carlos.reyes@cua.uam.mx",
+    "telefono": "5454354355435",
+    "direccion": "Calle Buena vista"
   }
 ]

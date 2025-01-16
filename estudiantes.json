@@ -9,5 +9,16 @@
     "direccion": "12",
     "calificaciones": [],
     "planEstudio": "0cdf8d3e-059f-4fb2-a311-7e668015e9e6"
+  },
+  {
+    "id": "7e0db4e0-8024-4296-8334-030b58aa059f",
+    "nombre": "juan",
+    "edad": "15",
+    "grado": 1,
+    "correo": "al22@gmail.com",
+    "telefono": "55734324234",
+    "direccion": "Calle Buena vista",
+    "calificaciones": [],
+    "planEstudio": "5f487ec6-41a6-4c6c-bde4-d2a7443c8429"
   }
 ]

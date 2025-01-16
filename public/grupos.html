@@ -13,14 +13,14 @@
       <ul id="menu">
         <li><a href="index.html">Inicio</a></li>
         <li class="auth-estudiante auth-personalAdministrativo">
-          <a href="#">Estudiantes</a>
+          <a href="#" class="auth-personalAdministrativo auth-profesor">Estudiantes</a> 
           <ul class="submenu">
             <li><a href="estudiantes.html">Ver Estudiantes</a></li>
             <li><a href="altaEstudiantes.html" class="auth-personalAdministrativo">Alta de Estudiantes</a></li>
           </ul>
         </li>
         <li class="auth-all">
-          <a href="#">Profesores</a>
+          <a href="#">Profesores</a> 
           <ul class="submenu">
             <li><a href="profesores.html">Ver Profesores</a></li>
             <li><a href="altaProfesores.html" class="auth-personalAdministrativo">Alta de Profesores</a></li>
@@ -33,7 +33,7 @@
             <li><a href="altaPersonalAdministrativo.html" class="auth-personalAdministrativo">Alta de Personal</a></li>
           </ul>
         </li>
-        <li class="auth-all">
+        <li class="auth-all"> 
           <a href="#">Planes de Estudio</a>
           <ul class="submenu">
             <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
@@ -107,10 +107,11 @@
   <a href="editarGrupo.html?id=${grupo.id}" class="auth-personalAdministrativo"><button>Editar</button></a>
   <button onclick="eliminarGrupo('${grupo.id}')" class="auth-personalAdministrativo">Eliminar</button>
   <a href="asignarAlumnosGrupo.html?id=${grupo.id}" class="auth-personalAdministrativo"><button>Asignar Alumnos</button></a>
-  <a href="calificarAlumnos.html?id=${grupo.id}"><button>Calificar Alumnos</button></a> <button onclick="eliminarPlanEstudio('${grupo.planEstudio.id}')">Eliminar</button>
+  <a href="calificarAlumnos.html?id=${grupo.id}" class="auth-profesor"><button>Calificar Alumnos</button></a> <button onclick="eliminarPlanEstudio('${grupo.planEstudio.id}')" class="auth-personalAdministrativo">Eliminar</button>
 </td>
           `;
           listaGrupos.appendChild(row);
+          actualizarMenu();
         });
 
       } catch (error) {

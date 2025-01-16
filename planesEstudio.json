@@ -10,5 +10,17 @@
         "descripcion": "sadasd"
       }
     ]
+  },
+  {
+    "id": "990c6432-e271-436e-a7db-36b2d08b023f",
+    "nombre": "Ingenieria en Matematicas Aplicadas",
+    "descripcion": "Un plan que contiene las materias de matematicas aplicadas",
+    "asignaturas": [
+      {
+        "id": "9107a190-5270-4583-85af-9bf0ba206271",
+        "nombre": "Aquitectura de Aplicaciones Empresariales",
+        "descripcion": "Materia de Arquitectura de Aplicaciones Empresariales"
+      }
+    ]
   }
 ]

@@ -2,6 +2,11 @@
   {
     "id": "a095bee1-7b2a-4968-b8b4-58bc24cd9d4c",
     "nombre": "Algebra",
-    "descripcion": "sadasd"
+    "descripcion": "Algebra 1"
+  },
+  {
+    "id": "9107a190-5270-4583-85af-9bf0ba206271",
+    "nombre": "Aquitectura de Aplicaciones Empresariales",
+    "descripcion": "Materia de Arquitectura de Aplicaciones Empresariales"
   }
 ]

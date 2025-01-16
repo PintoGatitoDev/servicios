@@ -11,6 +11,7 @@ const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { error } = require('console');
+const crypto = require('crypto');
 
 const port = 3000;
 const IP = 'localhost';
@@ -733,14 +734,17 @@ app.post('/crearGrupo', (req, res) => {
   app.get('/obtenerAlumnosGrupo/:id', (req, res) => {
     const idGrupo = req.params.id;
   
-    // Obtener los IDs de los estudiantes inscritos en el grupo
-    const estudiantesInscritos = inscripciones
-      .filter(inscripcion => inscripcion.idGrupo === idGrupo)
-      .map(inscripcion => inscripcion.idEstudiante);
+    // Obtener las inscripciones del grupo
+    const inscripcionesGrupo = inscripciones.filter(inscripcion => inscripcion.idGrupo === idGrupo);
   
-    // Obtener los estudiantes completos a partir de los IDs
-    const estudiantesGrupo = estudiantes
-      .filter(estudiante => estudiantesInscritos.includes(estudiante.id));
+    // Obtener los estudiantes del grupo con sus calificaciones
+    const estudiantesGrupo = inscripcionesGrupo.map(inscripcion => {
+      const estudiante = estudiantes.find(e => e.id === inscripcion.idEstudiante);
+      return {
+        ...estudiante,
+        calificacion: inscripcion.calificacion
+      };
+    });
   
     res.json({ estudiantes: estudiantesGrupo });
   });
@@ -831,6 +835,12 @@ function leerDatosDesdeArchivo(nombreArchivo) {
     }
 }
 
+function generarHash(contrasena) {
+    const hash = crypto.createHash('sha256');
+    hash.update(contrasena);
+    return hash.digest('hex');
+}
+
 // --- Servicio SOAP ---
 
 const service = {
@@ -849,7 +859,12 @@ const service = {
         },
         getAsignaturas: (args, callback) => {
             callback({ asignaturas: JSON.stringify(asignaturas) });
-        }
+        },
+        encriptarContrasena: (args, callback) => {
+            const { contrasena } = args;
+            const contrasenaEncriptada = generarHash(contrasena);
+            callback({ contrasenaEncriptada });
+        },
     }
 };
 
