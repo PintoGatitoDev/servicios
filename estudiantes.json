@@ -84,5 +84,16 @@
     "direccion": "Calle 1213",
     "calificaciones": [],
     "planEstudio": "0cdf8d3e-059f-4fb2-a311-7e668015e9e6"
+  },
+  {
+    "id": "d10c81c6-ee4a-4d79-bb60-02a5bc84fa38",
+    "nombre": "pepe",
+    "edad": "12",
+    "grado": 1,
+    "correo": "pepe@pepe.com",
+    "telefono": "21",
+    "direccion": "12",
+    "calificaciones": [],
+    "planEstudio": "0cdf8d3e-059f-4fb2-a311-7e668015e9e6"
   }
 ]

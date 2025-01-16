@@ -5,45 +5,56 @@
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-
-<header>
-  <h1>TICS Globals</h1>
-  <nav>
-    <ul>
-      <li><a href="index.html">Inicio</a></li>
-      <li>
-        <a href="#">Estudiantes</a> 
-        <ul class="submenu">
-          <li><a href="estudiantes.html">Ver Estudiantes</a></li>
-          <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="#">Profesores</a> 
-        <ul class="submenu">
-          <li><a href="profesores.html">Ver Profesores</a></li>
-          <li><a href="altaProfesores.html">Alta de Profesores</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="#">Personal Administrativo</a>
-        <ul class="submenu">
-          <li><a href="personalAdministrativo.html">Ver Personal</a></li>
-          <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="#">Planes de Estudio</a>
-        <ul class="submenu">
-          <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
-          <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
-        </ul>
-      </li>
-      <li><a href="asignaturas.html">Asignaturas</a></li>
-      <li><a href="#">Horarios</a></li>
-    </ul>
-  </nav>
-</header>
+  <header>
+    <h1>TICS Globals</h1>
+    <nav>
+      <ul id="menu">
+        <li><a href="index.html">Inicio</a></li>
+        <li class="auth-estudiante">
+          <a href="#">Estudiantes</a> 
+          <ul class="submenu">
+            <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+            <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+          </ul>
+        </li>
+        <li class="auth-profesor">
+          <a href="#">Profesores</a> 
+          <ul class="submenu">
+            <li><a href="profesores.html">Ver Profesores</a></li>
+            <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+          </ul>
+        </li>
+        <li class="auth-personalAdministrativo">
+          <a href="#">Personal Administrativo</a>
+          <ul class="submenu">
+            <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+            <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+          </ul>
+        </li>
+        <li class="auth-all"> 
+          <a href="#">Planes de Estudio</a>
+          <ul class="submenu">
+            <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+            <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
+          </ul>
+        </li>
+        <li class="auth-all">
+          <a href="#">Asignaturas</a>
+          <ul class="submenu">
+            <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+            <li><a href="altaAsignatura.html">Alta Asignatura</a></li>
+          </ul>
+        </li>
+        <li class="auth-all"><a href="#">Horarios</a></li> 
+        <li class="auth-none">
+          <a href="iniciarSesion.html" id="iniciarSesionBtn">Iniciar sesión</a>
+        </li>
+        <li class="auth-close">
+          <a href="#" id="cerrarSesionBtn">Cerrar sesión</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
 
 <div class="main-section">
   <div>
@@ -68,6 +79,7 @@
 </div>
 
 <script src="scripts.js"></script>
+<script src="auth.js"></script>
 <script>
   // Función para obtener la lista de planes de estudio del servidor
   async function obtenerPlanesEstudio() {

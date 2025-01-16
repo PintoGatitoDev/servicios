@@ -4,5 +4,11 @@
     "nombreUsuario": "Pedro",
     "contrasena": "$2b$10$KwClugccSNcnCk9ASQJj7.oOP0fzpzvFunqYyRR.W93d1GozgyXgm",
     "rol": "estudiante"
+  },
+  {
+    "id": "d10c81c6-ee4a-4d79-bb60-02a5bc84fa38",
+    "nombreUsuario": "pepe",
+    "contrasena": "$2b$10$aG0ahoHCL6NNzUHktlhjweFzM5iLAu8/OfO2d1SuNCqK45d/.SQ0u",
+    "rol": "estudiante"
   }
 ]

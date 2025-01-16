@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Alta de Plan de Estudio - TICS Globals</title>
+  <title>Iniciar sesión - TICS Globals</title>
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
@@ -58,50 +58,32 @@
 
 <div class="main-section">
   <div>
-    <h2>Crear Plan de Estudio</h2>
-    <form id="crearPlanEstudioForm">
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" placeholder="Nombre del plan" required><br>
-      <label for="descripcion">Descripción:</label>
-      <textarea id="descripcion" placeholder="Descripción del plan"></textarea><br>
-      <button type="submit">Crear</button>
+    <h2>Iniciar sesión</h2>
+    <form id="iniciarSesionForm">
+      <label for="usuario">Usuario:</label>
+      <input type="text" id="usuario" placeholder="Nombre de usuario" required><br>
+
+      <label for="contrasena">Contraseña:</label>
+      <input type="password" id="contrasena" placeholder="Contraseña" required><br>
+
+      <button type="submit">Iniciar sesión</button>
     </form>
   </div>
 </div>
 
+<script src="scripts.js"></script>
 <script src="auth.js"></script>
 <script>
-  // Manejar el formulario de creación de plan de estudio
-  const crearPlanEstudioForm = document.getElementById('crearPlanEstudioForm');
-  if (crearPlanEstudioForm) {
-    crearPlanEstudioForm.addEventListener('submit', async (event) => {
+  // Manejar el formulario de inicio de sesión
+  const iniciarSesionForm = document.getElementById('iniciarSesionForm');
+  if (iniciarSesionForm) {
+    iniciarSesionForm.addEventListener('submit', (event) => {
       event.preventDefault();
 
-      const nombre = document.getElementById('nombre').value;
-      const descripcion = document.getElementById('descripcion').value;
+      const usuario = document.getElementById('usuario').value;
+      const contrasena = document.getElementById('contrasena').value;
 
-      try {
-        const response = await fetch('http://localhost:3000/crearPlanEstudio', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ nombre, descripcion }),
-        });
-
-        if (response.ok) {
-          alert('Plan de estudio creado exitosamente');
-          crearPlanEstudioForm.reset();
-
-          // Corregir la redirección
-          window.location.href = 'planesEstudio.html';
-        } else {
-          alert('Error al crear el plan de estudio');
-        }
-      } catch (error) {
-        console.error('Error al crear el plan de estudio:', error);
-        alert('Error al crear el plan de estudio');
-      }
+      iniciarSesion(usuario, contrasena); // Llamar a la función de inicio de sesión en auth.js
     });
   }
 </script>

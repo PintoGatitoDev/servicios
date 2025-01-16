@@ -13,7 +13,7 @@ const jwt = require('jsonwebtoken');
 
 const port = 3000;
 const IP = 'localhost';
-const JWT_SECRET = 'your_jwt_secret'; // Reemplaza con una clave secreta segura
+const JWT_SECRET = 'Servicios'; // Reemplaza con una clave secreta segura
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
@@ -127,6 +127,7 @@ app.post('/registrar', async (req, res) => {
 
 // Inicio de sesión de usuario
 app.post('/iniciarSesion', async (req, res) => {
+    console.log(req.body); // Verificar que se reciben los datos del formulario
     const { nombreUsuario, contrasena } = req.body;
 
     const usuario = usuarios.find(u => u.nombreUsuario === nombreUsuario);
@@ -143,7 +144,18 @@ app.post('/iniciarSesion', async (req, res) => {
 
         // Generar un token de acceso
         const token = jwt.sign({ id: usuario.id, rol: usuario.rol }, JWT_SECRET);
-        res.json({ token });
+
+        // Crear el objeto de respuesta
+        const respuesta = { token: token, rol: usuario.rol };
+
+        // Convertir la respuesta a una cadena JSON
+        const jsonRespuesta = JSON.stringify(respuesta);
+
+        // Enviar la respuesta como JSON
+        res.json(jsonRespuesta); 
+
+        console.log(jsonRespuesta); // Verificar la respuesta JSON
+
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         res.status(500).json({ error: 'Error al iniciar sesión' });
@@ -153,19 +165,31 @@ app.post('/iniciarSesion', async (req, res) => {
 // Middleware para verificar el token de acceso
 function autenticar(req, res, next) {
     const token = req.header('Authorization');
-
     if (!token) {
-        return res.status(401).json({ error: 'Acceso denegado' });
+      return res.status(401).json({ error: 'Acceso denegado' });
     }
-
+  
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        req.usuario = decoded;
-        next();
+      const decoded = jwt.verify(token, JWT_SECRET);
+  
+      // Buscar el usuario en la base de datos (ejemplo)
+      const usuario = usuarios.find(u => u.id === decoded.id); 
+      if (!usuario) {
+        return res.status(401).json({ error: 'Token inválido o usuario no encontrado' });
+      }
+  
+      // Verificar si el token ha expirado (opcional)
+      // const expiracion = decoded.exp; // Obtener la fecha de expiración del token
+      // if (expiracion * 1000 < Date.now()) { 
+      //   return res.status(401).json({ error: 'Token expirado' });
+      // }
+  
+      req.usuario = decoded; // Asignar el usuario decodificado al request
+      next(); // Continuar con la siguiente función
     } catch (error) {
-        res.status(401).json({ error: 'Token inválido' });
+      res.status(401).json({ error: 'Token inválido' });
     }
-}
+  }
 
 // --- Rutas ---
 
