@@ -60,3 +60,13 @@ if (confirm('¿Estás seguro de que quieres eliminar este estudiante?')) {
   }
 }
 }
+
+function verificarToken() {
+  const token = localStorage.getItem('token');
+  if (token) {
+    // Verificar si el token es válido (opcional)
+    // ...
+    return true;
+  }
+  return false;
+}

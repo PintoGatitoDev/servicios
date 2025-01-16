@@ -80,6 +80,8 @@
         if (response.ok) {
           alert('Plan de estudio creado exitosamente');
           crearPlanEstudioForm.reset();
+
+          // Corregir la redirección
           window.location.href = 'planesEstudio.html';
         } else {
           alert('Error al crear el plan de estudio');

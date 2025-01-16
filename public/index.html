@@ -1,74 +1,80 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>TICS Globals - Bienvenido</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+  </head>
+  <body>
+    <header>
+      <h1>TICS Globals</h1>
+      <nav>
+        <ul id="menu">
+          <li><a href="index.html">Inicio</a></li>
+          <li class="auth-estudiante">
+            <a href="#">Estudiantes</a> 
+            <ul class="submenu">
+              <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+              <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+            </ul>
+          </li>
+          <li class="auth-profesor">
+            <a href="#">Profesores</a> 
+            <ul class="submenu">
+              <li><a href="profesores.html">Ver Profesores</a></li>
+              <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+            </ul>
+          </li>
+          <li class="auth-personalAdministrativo">
+            <a href="#">Personal Administrativo</a>
+            <ul class="submenu">
+              <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+              <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#">Planes de Estudio</a>
+            <ul class="submenu">
+              <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+              <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#">Asignaturas</a>
+            <ul class="submenu">
+              <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+              <li><a href="altaAsignatura.html">Alta Asignatura</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Horarios</a></li> 
+          <li class="auth-none">
+            <a href="#" id="iniciarSesionBtn">Iniciar sesión</a>
+          </li>
+          <li class="auth-all">
+            <a href="#" id="cerrarSesionBtn">Cerrar sesión</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
 
-<head>
-  <title>TICS Globals - Bienvenido</title>
-  <link rel="stylesheet" type="text/css" href="styles.css">
-</head>
+    <main>
+      <section>
+        <h2>Bienvenido a TICS Globals</h2>
+        <p>Somos una empresa líder en soluciones tecnológicas para la educación.</p>
+        <p>Nuestro sistema de gestión escolar te permite:</p>
+        <ul>
+          <li>Gestionar estudiantes, profesores y personal administrativo.</li>
+          <li>Crear y administrar planes de estudio, asignaturas y horarios.</li>
+          <li>Gestionar calificaciones y generar reportes académicos.</li>
+          <li>Realizar seguimiento del progreso académico de los estudiantes.</li>
+        </ul>
+      </section>
+    </main>
 
-<body>
-  <header>
-    <h1>TICS Globals</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li>
-          <a href="#">Estudiantes</a> 
-          <ul class="submenu">
-            <li><a href="estudiantes.html">Ver Estudiantes</a></li>
-            <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#">Profesores</a> 
-          <ul class="submenu">
-            <li><a href="profesores.html">Ver Profesores</a></li>
-            <li><a href="altaProfesores.html">Alta de Profesores</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#">Personal Administrativo</a>
-          <ul class="submenu">
-            <li><a href="personalAdministrativo.html">Ver Personal</a></li>
-            <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#">Planes de Estudio</a>
-          <ul class="submenu">
-            <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
-            <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#">Asignaturas</a>
-          <ul class="submenu">
-            <li><a href="asignaturas.html">Ver Asignaturas</a></li>
-            <li><a href="altaAsignatura.html">Alta Asignatura</a></li>
-          </ul>
-        </li>
-        <li><a href="#">Horarios</a></li> 
-      </ul>
-    </nav>
-  </header>
+    <footer>
+      <p>&copy; 2023 TICS Globals</p>
+    </footer>
 
-  <main>
-    <section>
-      <h2>Bienvenido a TICS Globals</h2>
-      <p>Somos una empresa líder en soluciones tecnológicas para la educación.</p>
-      <p>Nuestro sistema de gestión escolar te permite:</p>
-      <ul>
-        <li>Gestionar estudiantes, profesores y personal administrativo.</li>
-        <li>Crear y administrar planes de estudio, asignaturas y horarios.</li>
-        <li>Gestionar calificaciones y generar reportes académicos.</li>
-        <li>Realizar seguimiento del progreso académico de los estudiantes.</li>
-      </ul>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2023 TICS Globals</p>
-  </footer>
-</body>
-
+    <script src="scripts.js"></script> 
+    <script src="auth.js"></script>
+  </body>
 </html>

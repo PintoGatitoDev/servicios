@@ -73,5 +73,16 @@
       "Ciencias": 90,
       "Historia": 85
     }
+  },
+  {
+    "id": "5e6b469b-f8a6-4028-838b-7de26cfaf6af",
+    "nombre": "Pedro",
+    "edad": "12",
+    "grado": 1,
+    "correo": "pepe@pepe.com",
+    "telefono": "123",
+    "direccion": "Calle 1213",
+    "calificaciones": [],
+    "planEstudio": "0cdf8d3e-059f-4fb2-a311-7e668015e9e6"
   }
 ]
