@@ -45,6 +45,13 @@
             <li><a href="altaAsignatura.html" class="auth-personalAdministrativo">Alta Asignatura</a></li>
           </ul>
         </li>
+        <li class="auth-all">
+          <a href="#">Grupos</a>
+          <ul class="submenu">
+            <li><a href="grupos.html">Ver Grupos</a></li>
+            <li><a href="altaGrupo.html" class="auth-personalAdministrativo">Alta de Grupo</a></li>
+          </ul>
+        </li>
         <li class="auth-estudiante"><a href="moduloEstudiante.html">Módulo</a></li>
         <li class="auth-none">
           <a href="iniciarSesion.html" id="iniciarSesionBtn">Iniciar sesión</a>
@@ -56,50 +63,121 @@
     </nav>
   </header>
 
-<div class="main-section">
-  <div>
-    <h2>Crear Grupo</h2>
-    <form id="crearGrupoForm">
+  <div class="main-section">
+    <h2>Alta de Grupo</h2>
+    <form id="altaGrupoForm">
       <label for="asignatura">Asignatura:</label>
-      <input type="text" id="asignatura" placeholder="ID de la asignatura" required><br>
+      <select id="asignatura" name="asignatura">
+        </select><br><br>
+
       <label for="profesor">Profesor:</label>
-      <input type="text" id="profesor" placeholder="ID del profesor" required><br>
-      <label for="horario">Horario:</label>
-      <textarea id="horario" placeholder="Horario del grupo (formato JSON)"></textarea><br>
-      <button type="submit">Crear</button>
+      <select id="profesor" name="profesor">
+        </select><br><br>
+
+      <label for="planEstudio">Plan de Estudio:</label>
+      <select id="planEstudio" name="planEstudio">
+        </select><br><br>
+
+      <button type="submit">Crear Grupo</button>
     </form>
   </div>
-</div>
 
-<script src="auth.js"></script>
-<script>
-  // Obtener el ID del plan de estudio de la URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const planId = urlParams.get('planId');
+  <script src="scripts.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    // Cargar la lista de asignaturas
+    cargarAsignaturas();
 
-  // Manejar el formulario de creación de grupo
-  const crearGrupoForm = document.getElementById('crearGrupoForm');
-  if (crearGrupoForm) {
-    crearGrupoForm.addEventListener('submit', async (event) => {
+    // Cargar la lista de profesores
+    cargarProfesores();
+
+    // Cargar la lista de planes de estudio
+    cargarPlanesEstudio();
+
+    async function cargarAsignaturas() {
+      try {
+        const response = await fetch('http://localhost:3000/obtenerAsignaturas');
+        if (!response.ok) {
+          throw new Error('Error al obtener la lista de asignaturas');
+        }
+        const data = await response.json();
+
+        const asignaturaSelect = document.getElementById('asignatura');
+        data.asignaturas.forEach(asignatura => {
+          const option = document.createElement('option');
+          option.value = asignatura.id;
+          option.text = asignatura.nombre;
+          asignaturaSelect.add(option);
+        });
+      } catch (error) {
+        console.error('Error al obtener la lista de asignaturas:', error);
+        alert('Error al obtener la lista de asignaturas');
+      }
+    }
+
+    async function cargarProfesores() {
+      try {
+        const response = await fetch('http://localhost:3000/obtenerProfesores');
+        if (!response.ok) {
+          throw new Error('Error al obtener la lista de profesores');
+        }
+        const data = await response.json();
+
+        const profesorSelect = document.getElementById('profesor');
+        data.profesores.forEach(profesor => {
+          const option = document.createElement('option');
+          option.value = profesor.id;
+          option.text = profesor.nombre;
+          profesorSelect.add(option);
+        });
+      } catch (error) {
+        console.error('Error al obtener la lista de profesores:', error);
+        alert('Error al obtener la lista de profesores');
+      }
+    }
+
+    async function cargarPlanesEstudio() {
+      try {
+        const response = await fetch('http://localhost:3000/obtenerPlanesEstudio');
+        if (!response.ok) {
+          throw new Error('Error al obtener la lista de planes de estudio');
+        }
+        const data = await response.json();
+
+        const planEstudioSelect = document.getElementById('planEstudio');
+        data.planes.forEach(plan => {
+          const option = document.createElement('option');
+          option.value = plan.id;
+          option.text = plan.nombre;
+          planEstudioSelect.add(option);
+        });
+      } catch (error) {
+        console.error('Error al obtener la lista de planes de estudio:', error);
+        alert('Error al obtener la lista de planes de estudio');
+      }
+    }
+
+    // Manejar el envío del formulario
+    document.getElementById('altaGrupoForm').addEventListener('submit', async (event) => {
       event.preventDefault();
 
       const asignatura = document.getElementById('asignatura').value;
       const profesor = document.getElementById('profesor').value;
-      const horario = JSON.parse(document.getElementById('horario').value); // Convertir el texto a JSON
+      const planEstudio = document.getElementById('planEstudio').value;
 
       try {
-        const response = await fetch(`http://localhost:3000/crearGrupo/${planId}`, {
+        const response = await fetch('http://localhost:3000/crearGrupo', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ asignatura, profesor, horario }),
+          body: JSON.stringify({ asignatura, profesor, planEstudio })
         });
 
         if (response.ok) {
           alert('Grupo creado exitosamente');
-          crearGrupoForm.reset();
-          window.location.href = `grupos.html?planId=${planId}`;
+          // Redirigir a la página de grupos
+          window.location.href = 'grupos.html'; 
         } else {
           alert('Error al crear el grupo');
         }
@@ -108,8 +186,6 @@
         alert('Error al crear el grupo');
       }
     });
-  }
-</script>
-
+  </script>
 </body>
 </html>

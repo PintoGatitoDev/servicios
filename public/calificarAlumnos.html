@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calificar Alumnos - TICS Globals</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>TICS Globals</h1>
+    <nav>
+      <ul id="menu">
+        <li><a href="index.html">Inicio</a></li>
+        <li class="auth-estudiante auth-personalAdministrativo">
+          <a href="#">Estudiantes</a> 
+          <ul class="submenu">
+            <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+            <li><a href="altaEstudiantes.html" class="auth-personalAdministrativo">Alta de Estudiantes</a></li>
+          </ul>
+        </li>
+        <li class="auth-all">
+          <a href="#">Profesores</a> 
+          <ul class="submenu">
+            <li><a href="profesores.html">Ver Profesores</a></li>
+            <li><a href="altaProfesores.html" class="auth-personalAdministrativo">Alta de Profesores</a></li>
+          </ul>
+        </li>
+        <li class="auth-personalAdministrativo">
+          <a href="#">Personal Administrativo</a>
+          <ul class="submenu">
+            <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+            <li><a href="altaPersonalAdministrativo.html" class="auth-personalAdministrativo">Alta de Personal</a></li>
+          </ul>
+        </li>
+        <li class="auth-all"> 
+          <a href="#">Planes de Estudio</a>
+          <ul class="submenu">
+            <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+            <li><a href="altaPlanEstudio.html" class="auth-personalAdministrativo">Alta Plan de Estudio</a></li>
+          </ul>
+        </li>
+        <li class="auth-all">
+          <a href="#">Asignaturas</a>
+          <ul class="submenu">
+            <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+            <li><a href="altaAsignatura.html" class="auth-personalAdministrativo">Alta Asignatura</a></li>
+          </ul>
+        </li>
+        <li class="auth-all">
+          <a href="#">Grupos</a>
+          <ul class="submenu">
+            <li><a href="grupos.html">Ver Grupos</a></li>
+            <li><a href="altaGrupo.html" class="auth-personalAdministrativo">Alta de Grupo</a></li>
+          </ul>
+        </li>
+        <li class="auth-estudiante"><a href="moduloEstudiante.html">Módulo</a></li>
+        <li class="auth-none">
+          <a href="iniciarSesion.html" id="iniciarSesionBtn">Iniciar sesión</a>
+        </li>
+        <li class="auth-close">
+          <a href="#" id="cerrarSesionBtn">Cerrar sesión</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div>
+    <h2>Calificar Alumnos</h2>
+
+    <div id="infoGrupo">
+      <h3>Información del Grupo</h3>
+      <p>ID: <span id="idGrupo"></span></p>
+      <p>Asignatura: <span id="nombreAsignatura"></span></p>
+      <p>Profesor: <span id="nombreProfesor"></span></p>
+    </div>
+
+    <h3>Alumnos</h3>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Calificación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="listaAlumnos"></tbody>
+    </table>
+  </div>
+
+  <script src="scripts.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const idGrupo = urlParams.get('id');
+
+    obtenerInformacionGrupo(idGrupo);
+    cargarAlumnos(idGrupo);
+
+    async function obtenerInformacionGrupo(idGrupo) {
+      try {
+        const response = await fetch(`http://localhost:3000/obtenerGrupo/${idGrupo}`);
+        if (!response.ok) {
+          throw new Error('Error al obtener la información del grupo');
+        }
+        const data = await response.json();
+        const grupo = data.grupo;
+
+        document.getElementById('idGrupo').textContent = grupo.id;
+        document.getElementById('nombreAsignatura').textContent = grupo.asignatura.nombre;
+        document.getElementById('nombreProfesor').textContent = grupo.profesor.nombre;
+
+      } catch (error) {
+        console.error('Error al obtener la información del grupo:', error);
+        alert('Error al obtener la información del grupo');
+      }
+    }
+
+    async function cargarAlumnos(idGrupo) {
+      try {
+        const response = await fetch(`http://localhost:3000/obtenerAlumnosGrupo/${idGrupo}`);
+        if (!response.ok) {
+          throw new Error('Error al obtener la lista de estudiantes');
+        }
+        const data = await response.json();
+
+        const listaAlumnos = document.getElementById('listaAlumnos');
+        listaAlumnos.innerHTML = '';
+
+        if (data.estudiantes && data.estudiantes.length > 0) {
+          data.estudiantes.forEach(estudiante => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${estudiante.id}</td>
+              <td>${estudiante.nombre}</td>
+              <td>
+                <input type="number" class="calificacion-input" data-estudiante="${estudiante.id}" data-grupo="${idGrupo}" value="${estudiante.calificacion || ''}">
+              </td>
+              <td>
+                <button class="guardar-calificacion-btn" data-estudiante="${estudiante.id}" data-grupo="${idGrupo}">Guardar</button>
+              </td>
+            `;
+            listaAlumnos.appendChild(row);
+          });
+
+          // Manejar eventos de los botones "Guardar"
+          listaAlumnos.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.classList.contains('guardar-calificacion-btn')) {
+              const idEstudiante = target.dataset.estudiante;
+              const idGrupo = target.dataset.grupo;
+              const nuevaCalificacion = document.querySelector(`.calificacion-input[data-estudiante="${idEstudiante}"][data-grupo="${idGrupo}"]`).value;
+              guardarCalificacion(idEstudiante, idGrupo, nuevaCalificacion);
+            }
+          });
+        } else {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td colspan="4">No hay alumnos inscritos en este grupo</td>`;
+          listaAlumnos.appendChild(row);
+        }
+
+      } catch (error) {
+        console.error('Error al obtener la lista de estudiantes:', error);
+        alert('Error al obtener la lista de estudiantes');
+      }
+    }
+
+    async function guardarCalificacion(idEstudiante, idGrupo, nuevaCalificacion) {
+      try {
+        const token = obtenerToken();
+        const response = await fetch(`http://localhost:3000/guardarCalificacion/${idEstudiante}/${idGrupo}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          },
+          body: JSON.stringify({ calificacion: nuevaCalificacion })
+        });
+
+        if (response.ok) {
+          alert('Calificación guardada exitosamente');
+        } else {
+          alert('Error al guardar la calificación');
+        }
+      } catch (error) {
+        console.error('Error al guardar la calificación:', error);
+        alert('Error al guardar la calificación');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Gestionar Grupos - TICS Globals</title>
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
+
 <body>
   <header>
     <h1>TICS Globals</h1>
@@ -11,14 +13,14 @@
       <ul id="menu">
         <li><a href="index.html">Inicio</a></li>
         <li class="auth-estudiante auth-personalAdministrativo">
-          <a href="#">Estudiantes</a> 
+          <a href="#">Estudiantes</a>
           <ul class="submenu">
             <li><a href="estudiantes.html">Ver Estudiantes</a></li>
             <li><a href="altaEstudiantes.html" class="auth-personalAdministrativo">Alta de Estudiantes</a></li>
           </ul>
         </li>
         <li class="auth-all">
-          <a href="#">Profesores</a> 
+          <a href="#">Profesores</a>
           <ul class="submenu">
             <li><a href="profesores.html">Ver Profesores</a></li>
             <li><a href="altaProfesores.html" class="auth-personalAdministrativo">Alta de Profesores</a></li>
@@ -31,7 +33,7 @@
             <li><a href="altaPersonalAdministrativo.html" class="auth-personalAdministrativo">Alta de Personal</a></li>
           </ul>
         </li>
-        <li class="auth-all"> 
+        <li class="auth-all">
           <a href="#">Planes de Estudio</a>
           <ul class="submenu">
             <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
@@ -45,6 +47,13 @@
             <li><a href="altaAsignatura.html" class="auth-personalAdministrativo">Alta Asignatura</a></li>
           </ul>
         </li>
+        <li class="auth-all">
+          <a href="#">Grupos</a>
+          <ul class="submenu">
+            <li><a href="grupos.html">Ver Grupos</a></li>
+            <li><a href="altaGrupo.html" class="auth-personalAdministrativo">Alta de Grupo</a></li>
+          </ul>
+        </li>
         <li class="auth-estudiante"><a href="moduloEstudiante.html">Módulo</a></li>
         <li class="auth-none">
           <a href="iniciarSesion.html" id="iniciarSesionBtn">Iniciar sesión</a>
@@ -56,13 +65,8 @@
     </nav>
   </header>
 
-<div class="main-section">
   <div>
     <h2>Lista de Grupos</h2>
-
-    <a href="altaGrupo.html">
-      <button class="add-button" class="auth-personalAdministrativo">Crear nuevo grupo</button>
-    </a>
 
     <table>
       <thead>
@@ -70,81 +74,73 @@
           <th>ID</th>
           <th>Asignatura</th>
           <th>Profesor</th>
-          <th>Horario</th>
+          <th>Plan de Estudio</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody id="listaGrupos"></tbody>
     </table>
   </div>
-</div>
 
-<script src="scripts.js"></script>
-<script src="auth.js"></script>
-<script>
-  // Obtener el ID del plan de estudio de la URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const planId = urlParams.get('planId');
-
-  // Función para obtener la lista de grupos del servidor
-  async function obtenerGrupos(planId) {
-    try {
-      const response = await fetch(`http://localhost:3000/obtenerGrupos/${planId}`);
-      if (!response.ok) {
-        throw new Error('Error al obtener la lista de grupos');
-      }
-      const data = await response.json();
-
-      const listaGrupos = document.getElementById('listaGrupos');
-      listaGrupos.innerHTML = '';
-
-      data.grupos.forEach(grupo => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${grupo.id}</td>
-          <td>${grupo.asignatura}</td>
-          <td>${grupo.profesor}</td>
-          <td>${JSON.stringify(grupo.horario)}</td>
-          <td>
-            <a href="editarGrupo.html?id=${grupo.id}"><button>Editar</button></a>
-            <button onclick="eliminarGrupo('${grupo.id}')">Eliminar</button>
-          </td>
-        `;
-        listaGrupos.appendChild(row);
-      });
-
-    } catch (error) {
-      console.error('Error al obtener la lista de grupos:', error);
-      alert('Error al obtener la lista de grupos');
-    }
-  }
-
-  // Función para eliminar un grupo
-  async function eliminarGrupo(id) {
-    if (confirm('¿Estás seguro de que quieres eliminar este grupo?')) {
+  <script src="scripts.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    async function obtenerGrupos() {
       try {
-        const response = await fetch(`http://localhost:3000/eliminarGrupo/${id}`, {
-          method: 'DELETE',
+        const response = await fetch('http://localhost:3000/obtenerGrupos');
+        if (!response.ok) {
+          throw new Error('Error al obtener la lista de grupos');
+        }
+        const data = await response.json();
+
+        const listaGrupos = document.getElementById('listaGrupos');
+        listaGrupos.innerHTML = '';
+
+        data.grupos.forEach(grupo => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${grupo.id}</td>
+            <td>${grupo.asignatura.nombre}</td>
+            <td>${grupo.profesor.nombre}</td>
+            <td>${grupo.planEstudio.nombre}</td>
+            <td>
+  <a href="editarGrupo.html?id=${grupo.id}" class="auth-personalAdministrativo"><button>Editar</button></a>
+  <button onclick="eliminarGrupo('${grupo.id}')" class="auth-personalAdministrativo">Eliminar</button>
+  <a href="asignarAlumnosGrupo.html?id=${grupo.id}" class="auth-personalAdministrativo"><button>Asignar Alumnos</button></a>
+  <a href="calificarAlumnos.html?id=${grupo.id}"><button>Calificar Alumnos</button></a> <button onclick="eliminarPlanEstudio('${grupo.planEstudio.id}')">Eliminar</button>
+</td>
+          `;
+          listaGrupos.appendChild(row);
         });
 
-        if (response.ok) {
-          alert('Grupo eliminado exitosamente');
-          obtenerGrupos(planId); // Actualizar la lista de grupos
-        } else {
-          alert('Error al eliminar el grupo');
-        }
       } catch (error) {
-        console.error('Error al eliminar el grupo:', error);
-        alert('Error al eliminar el grupo');
+        console.error('Error al obtener la lista de grupos:', error);
+        alert('Error al obtener la lista de grupos');
       }
     }
-  }
 
-  // Llamar a la función para obtener la lista de grupos al cargar la página
-  if (planId) {
-    obtenerGrupos(planId);
-  }
-</script>
+    async function eliminarGrupo(id) {
+      if (confirm('¿Estás seguro de que quieres eliminar este grupo?')) {
+        try {
+          const response = await fetch(`http://localhost:3000/eliminarGrupo/${id}`, {
+            method: 'DELETE',
+          });
 
+          if (response.ok) {
+            alert('Grupo eliminado exitosamente');
+            obtenerGrupos(); // Actualizar la lista de grupos
+          } else {
+            alert('Error al eliminar el grupo');
+          }
+        } catch (error) {
+          console.error('Error al eliminar el grupo:', error);
+          alert('Error al eliminar el grupo');
+        }
+      }
+    }
+
+    obtenerGrupos();
+  </script>
 </body>
+
 </html>
