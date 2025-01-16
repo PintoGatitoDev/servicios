@@ -865,6 +865,19 @@ const service = {
             const contrasenaEncriptada = generarHash(contrasena);
             callback({ contrasenaEncriptada });
         },
+        verificarContrasena: (args, callback) => {
+            const { nombreUsuario, contrasena } = args;
+            const usuario = usuarios.find(u => u.nombreUsuario === nombreUsuario);
+            if (!usuario) {
+               return callback({ contrasenasCoinciden: false }); // Usuario no encontrado
+            }else{
+                if(usuario.contresena === generarHash(contrasena)){
+                    callback({ contrasenasCoinciden: true });
+                }else{
+                    return callback({ contrasenasCoinciden: false });
+                }
+            }
+        }
     }
 };
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
-             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
              xmlns:tns="http://example.com/Educacion"
              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
              targetNamespace="http://example.com/Educacion"
-             name="SumService">
+             name="EducacionService">
     <types>
         <xsd:schema targetNamespace="http://example.com/Educacion">
             <xs:element name="getEstudiantes">
@@ -71,6 +71,21 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="verificarContrasena">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="nombreUsuario" type="xs:string"/>
+                        <xs:element name="contrasena" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="verificarContrasenaResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="constraseñaVeredicto" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xsd:schema>
     </types>
 
@@ -110,6 +125,12 @@
     <message name="encriptarContrasenaResponse">
         <part name="parameters" element="tns:encriptarContrasenaResponse"/>
     </message>
+    <message name="verificarContrasenaRequest">
+        <part name="parameters" element="tns:verificarContrasenaRequest"/>
+    </message>
+    <message name="verificarContrasenaResponse">
+        <part name="parameters" element="tns:verificarContrasenaResponse"/>
+    </message>
 
     <portType name="ServicioPortType">
         <operation name="getEstudiantes">
@@ -136,67 +157,80 @@
             <input message="tns:encriptarContrasenaRequest"/>
             <output message="tns:encriptarContrasenaResponse"/>
         </operation>
+        <operation name="verificarContrasena">
+            <input message="tns:verificarContrasenaRequest"/>
+            <output message="tns:verificarContrasenaResponse"/>
+        </operation>
     </portType>
     <binding name="GestionAcademicaBinding" type="tns:GestionAcademicaPortType">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="getEstudiantes">
-            <soap:operation soapAction="http://example.com/Educacion/getEstudiantes"/>
+            <soap12:operation soapAction="http://example.com/Educacion/getEstudiantes"/>
             <input>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </input>
             <output>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </output>
         </operation>
          <operation name="getProfesores">
-            <soap:operation soapAction="http://example.com/Educacion/getProfesores"/>
+            <soap12:operation soapAction="http://example.com/Educacion/getProfesores"/>
             <input>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </input>
             <output>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </output>
         </operation>
         <operation name="getPersonalAdministrativo">
-            <soap:operation soapAction="http://example.com/Educacion/getPersonalAdministrativo"/>
+            <soap12:operation soapAction="http://example.com/Educacion/getPersonalAdministrativo"/>
             <input>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </input>
             <output>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </output>
         </operation>
         <operation name="getPlanesEstudio">
-            <soap:operation soapAction="http://example.com/Educacion/getPlanesEstudio"/>
+            <soap12:operation soapAction="http://example.com/Educacion/getPlanesEstudio"/>
             <input>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </input>
             <output>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </output>
         </operation>
          <operation name="getAsignaturas">
-            <soap:operation soapAction="http://example.com/Educacion/getAsignaturas"/>
+            <soap12:operation soapAction="http://example.com/Educacion/getAsignaturas"/>
             <input>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </input>
             <output>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </output>
         </operation>
         <operation name="encriptarContrasena">
-            <soap:operation soapAction="http://example.com/Educacion/encriptarContrasena"/>
+            <soap12:operation soapAction="http://example.com/Educacion/encriptarContrasena"/>
             <input>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
             </input>
             <output>
-                <soap:body use="literal"/>
+                <soap12:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="verificarContrasena">
+            <soap12:operation soapAction="http://example.com/Educacion/verificarContrasena"/>
+            <input>
+                <soap12:body use="literal"/>
+            </input>
+            <output>
+                <soap12:body use="literal"/>
             </output>
         </operation>
     </binding>
     <service name="Servicio">
         <port name="ServicioPort" binding="tns:ServicioBinding">
-            <soap:address location="http://localhost:3000/wsdl"/>
+            <soap12:address location="http://localhost:3000/wsdl"/>
         </port>
     </service>
 </definitions>
