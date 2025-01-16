@@ -7,52 +7,152 @@
              name="SumService">
     <types>
         <xsd:schema targetNamespace="http://example.com/Educacion">
-            <xsd:element name="consultarCalificaciones">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="idEstudiante" type="xsd:string"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-            <xsd:element name="consultarCalificacionesResponse">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="calificaciones" type="tns:ArrayOfCalificacion"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-            <xsd:complexType name="Calificacion">
-                <xsd:sequence>
-                    <xsd:element name="materia" type="xsd:string"/>
-                    <xsd:element name="nota" type="xsd:double"/>
-                </xsd:sequence>
-            </xsd:complexType
->
-            <xsd:complexType name="ArrayOfCalificacion">
-               <xsd:sequence>
-                 <xsd:element name="calificacion" type="tns:Calificacion" minOccurs="0" maxOccurs="unbounded"/>
-               </xsd:sequence>
-             </xsd:complexType>
+            <xs:element name="getEstudiantes">
+                <xs:complexType/>
+            </xs:element>
+            <xs:element name="getEstudiantesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="estudiantes" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getProfesores">
+                <xs:complexType/>
+            </xs:element>
+            <xs:element name="getProfesoresResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="profesores" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+             <xs:element name="getPersonalAdministrativo">
+                <xs:complexType/>
+            </xs:element>
+            <xs:element name="getPersonalAdministrativoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="personalAdministrativo" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPlanesEstudio">
+                <xs:complexType/>
+            </xs:element>
+            <xs:element name="getPlanesEstudioResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="planesEstudio" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+             <xs:element name="getAsignaturas">
+                <xs:complexType/>
+            </xs:element>
+            <xs:element name="getAsignaturasResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="asignaturas" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xsd:schema>
     </types>
 
-    <message name="consultarCalificacionesRequest">
-        <part element="tns:consultarCalificaciones" name="parameters"/>
+    <message name="getEstudiantesRequest">
+        <part name="parameters" element="tns:getEstudiantes"/>
     </message>
-    <message name="consultarCalificacionesResponse">
-        <part element="tns:consultarCalificacionesResponse" name="parameters"/>
+    <message name="getEstudiantesResponse">
+        <part name="parameters" element="tns:getEstudiantesResponse"/>
+    </message>
+    <message name="getProfesoresRequest">
+        <part name="parameters" element="tns:getProfesores"/>
+    </message>
+    <message name="getProfesoresResponse">
+         <part name="parameters" element="tns:getProfesoresResponse"/>
+    </message>
+    <message name="getPersonalAdministrativoRequest">
+        <part name="parameters" element="tns:getPersonalAdministrativo"/>
+    </message>
+    <message name="getPersonalAdministrativoResponse">
+        <part name="parameters" element="tns:getPersonalAdministrativoResponse"/>
+    </message>
+    <message name="getPlanesEstudioRequest">
+        <part name="parameters" element="tns:getPlanesEstudio"/>
+    </message>
+    <message name="getPlanesEstudioResponse">
+        <part name="parameters" element="tns:getPlanesEstudioResponse"/>
+    </message>
+    <message name="getAsignaturasRequest">
+        <part name="parameters" element="tns:getAsignaturas"/>
+    </message>
+    <message name="getAsignaturasResponse">
+        <part name="parameters" element="tns:getAsignaturasResponse"/>
     </message>
 
-    <portType name="GestionAcademicaPortType">
-        <operation name="consultarCalificaciones">
-            <input message="tns:consultarCalificacionesRequest"/>
-            <output message="tns:consultarCalificacionesResponse"/>
+    <portType name="ServicioPortType">
+        <operation name="getEstudiantes">
+            <input message="tns:getEstudiantesRequest"/>
+            <output message="tns:getEstudiantesResponse"/>
+        </operation>
+         <operation name="getProfesores">
+            <input message="tns:getProfesoresRequest"/>
+            <output message="tns:getProfesoresResponse"/>
+        </operation>
+        <operation name="getPersonalAdministrativo">
+            <input message="tns:getPersonalAdministrativoRequest"/>
+            <output message="tns:getPersonalAdministrativoResponse"/>
+        </operation>
+         <operation name="getPlanesEstudio">
+            <input message="tns:getPlanesEstudioRequest"/>
+            <output message="tns:getPlanesEstudioResponse"/>
+        </operation>
+        <operation name="getAsignaturas">
+            <input message="tns:getAsignaturasRequest"/>
+            <output message="tns:getAsignaturasResponse"/>
         </operation>
     </portType>
     <binding name="GestionAcademicaBinding" type="tns:GestionAcademicaPortType">
-        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="consultarCalificaciones">
-            <soap:operation soapAction="consultarCalificaciones"/>
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="getEstudiantes">
+            <soap:operation soapAction="http://example.com/Educacion/getEstudiantes"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+         <operation name="getProfesores">
+            <soap:operation soapAction="http://example.com/Educacion/getProfesores"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getPersonalAdministrativo">
+            <soap:operation soapAction="http://example.com/Educacion/getPersonalAdministrativo"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getPlanesEstudio">
+            <soap:operation soapAction="http://example.com/Educacion/getPlanesEstudio"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+         <operation name="getAsignaturas">
+            <soap:operation soapAction="http://example.com/Educacion/getAsignaturas"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -61,8 +161,8 @@
             </output>
         </operation>
     </binding>
-    <service name="GestionAcademicaService">
-        <port name="GestionAcademicaServicePort" binding="tns:GestionAcademicaBinding">
+    <service name="Servicio">
+        <port name="ServicioPort" binding="tns:ServicioBinding">
             <soap:address location="http://localhost:3000/wsdl"/>
         </port>
     </service>
