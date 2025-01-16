@@ -23,8 +23,8 @@ async function obtenerEstudiantes() {
           <td>${estudiante.telefono}</td> 
           <td>${estudiante.direccion}</td> 
           <td>
-            <a href="editarEstudiante.html?id=${estudiante.id}"><button>Editar</button></a>
-            <button onclick="eliminarEstudiante('${estudiante.id}')">Eliminar</button>
+            <a href="editarEstudiante.html?id=${estudiante.id}" class="auth-personalAdministrativo"><button>Editar</button></a>
+            <button onclick="eliminarEstudiante('${estudiante.id}')" class="auth-personalAdministrativo">Eliminar</button>
           </td>
         `;
         listaEstudiantes.appendChild(row);

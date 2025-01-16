@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Agregar Asignatura a Plan</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>TICS Globals</h1>
+    <nav>
+      <ul id="menu">
+        <li><a href="index.html">Inicio</a></li>
+        <li class="auth-estudiante auth-personalAdministrativo">
+          <a href="#">Estudiantes</a> 
+          <ul class="submenu">
+            <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+            <li><a href="altaEstudiantes.html" class="auth-personalAdministrativo">Alta de Estudiantes</a></li>
+          </ul>
+        </li>
+        <li class="auth-all">
+          <a href="#">Profesores</a> 
+          <ul class="submenu">
+            <li><a href="profesores.html">Ver Profesores</a></li>
+            <li><a href="altaProfesores.html" class="auth-personalAdministrativo">Alta de Profesores</a></li>
+          </ul>
+        </li>
+        <li class="auth-personalAdministrativo">
+          <a href="#">Personal Administrativo</a>
+          <ul class="submenu">
+            <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+            <li><a href="altaPersonalAdministrativo.html" class="auth-personalAdministrativo">Alta de Personal</a></li>
+          </ul>
+        </li>
+        <li class="auth-all"> 
+          <a href="#">Planes de Estudio</a>
+          <ul class="submenu">
+            <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+            <li><a href="altaPlanEstudio.html" class="auth-personalAdministrativo">Alta Plan de Estudio</a></li>
+          </ul>
+        </li>
+        <li class="auth-all">
+          <a href="#">Asignaturas</a>
+          <ul class="submenu">
+            <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+            <li><a href="altaAsignatura.html" class="auth-personalAdministrativo">Alta Asignatura</a></li>
+          </ul>
+        </li>
+        <li class="auth-estudiante"><a href="moduloEstudiante.html">Módulo</a></li>
+        <li class="auth-none">
+          <a href="iniciarSesion.html" id="iniciarSesionBtn">Iniciar sesión</a>
+        </li>
+        <li class="auth-close">
+          <a href="#" id="cerrarSesionBtn">Cerrar sesión</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="main-section">
+    <h2>Agregar Asignatura a Plan de Estudio</h2>
+    <form id="agregarAsignaturaForm">
+      <input type="hidden" id="idPlan" name="idPlan">
+      <label for="idAsignatura">Asignatura:</label>
+      <select id="idAsignatura" name="idAsignatura">
+        </select><br><br>
+
+      <button type="submit">Agregar Asignatura</button>
+    </form>
+  </div>
+
+  <script src="auth.js"></script> 
+  <script>
+    // Obtener el ID del plan de estudio de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const idPlan = urlParams.get('id');
+    document.getElementById('idPlan').value = idPlan;
+
+    // Cargar la lista de asignaturas
+    cargarAsignaturas();
+
+    async function cargarAsignaturas() {
+      try {
+        const response = await fetch('http://localhost:3000/obtenerAsignaturas');
+        if (!response.ok) {
+          throw new Error('Error al obtener la lista de asignaturas');
+        }
+        const data = await response.json();
+
+        const asignaturaSelect = document.getElementById('idAsignatura');
+        data.asignaturas.forEach(asignatura => {
+          const option = document.createElement('option');
+          option.value = asignatura.id;
+          option.text = asignatura.nombre;
+          asignaturaSelect.add(option);
+        });
+      } catch (error) {
+        console.error('Error al obtener la lista de asignaturas:', error);
+        alert('Error al obtener la lista de asignaturas');
+      }
+    }
+
+    // Manejar el envío del formulario
+    document.getElementById('agregarAsignaturaForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const idPlan = document.getElementById('idPlan').value;
+      const idAsignatura = document.getElementById('idAsignatura').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/agregarAsignaturaPlan', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ idPlan, idAsignatura })
+        });
+
+        if (response.ok) {
+          alert('Asignatura agregada al plan de estudio exitosamente');
+          // Redirigir a la página de planes de estudio
+          window.location.href = 'planesEstudio.html'; 
+        } else {
+          alert('Error al agregar la asignatura al plan de estudio');
+        }
+      } catch (error) {
+        console.error('Error al agregar la asignatura al plan de estudio:', error);
+        alert('Error al agregar la asignatura al plan de estudio');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -10,6 +10,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { error } = require('console');
 
 const port = 3000;
 const IP = 'localhost';
@@ -59,11 +60,11 @@ class PersonalAdministrativo {
 }
 
 class PlanEstudio {
-    constructor(id, nombre, descripcion, grupos) {
+    constructor(id, nombre, descripcion, asignaturas = []) { // Agregar asignaturas al constructor
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.grupos = grupos || [];
+        this.asignaturas = asignaturas; // Inicializar la propiedad asignaturas
     }
 }
 
@@ -75,14 +76,16 @@ class Asignatura {
     }
 }
 
+
 class Grupo {
-    constructor(id, asignatura, profesor, horario) {
-        this.id = id;
-        this.asignatura = asignatura;
-        this.profesor = profesor;
-        this.horario = horario || [];
+    constructor(id, asignatura, profesor, horario, planEstudio) {
+      this.id = id;
+      this.asignatura = asignatura;
+      this.profesor = profesor;
+      this.horario = horario || [];
+      this.planEstudio = planEstudio;
     }
-}
+  }
 
 // --- Cargar datos desde archivos ---
 
@@ -91,6 +94,9 @@ const profesores = leerDatosDesdeArchivo('profesores.json');
 const personalAdministrativo = leerDatosDesdeArchivo('personalAdministrativo.json');
 const planesEstudio = leerDatosDesdeArchivo('planesEstudio.json');
 const asignaturas = leerDatosDesdeArchivo('asignaturas.json');
+const grupos = leerDatosDesdeArchivo('grupos.json');
+const usuarios = leerDatosDesdeArchivo('usuarios.json');
+const inscripciones = leerDatosDesdeArchivo('inscripciones.json'); // Cargar las inscripciones
 
 // --- Autenticación ---
 
@@ -277,6 +283,82 @@ app.delete('/eliminarEstudiante/:id', (req, res) => {
     res.json({ message: 'Estudiante eliminado exitosamente' });
 });
 
+app.post('/inscribirEstudiante', autenticar, (req, res) => {
+    // Verificar que el usuario que realiza la petición sea personal administrativo
+    if (req.usuario.rol !== 'personalAdministrativo') {
+      return res.status(403).json({ error: 'No tienes permiso para acceder a esta ruta' });
+    }
+  
+    const { idEstudiante, idGrupo } = req.body;
+  
+    // Verificar si el estudiante y el grupo existen
+    const estudiante = estudiantes.find(e => e.id === idEstudiante);
+    const grupo = planesEstudio.flatMap(plan => plan.grupos).find(g => g.id === idGrupo);
+  
+    if (!estudiante) {
+      return res.status(404).json({ error: 'Estudiante no encontrado' });
+    }
+    if (!grupo) {
+      return res.status(404).json({ error: 'Grupo no encontrado' });
+    }
+  
+    // Verificar si el estudiante ya está inscrito en el grupo
+    const inscripcionExistente = inscripciones.find(inscripcion => inscripcion.idEstudiante === idEstudiante && inscripcion.idGrupo === idGrupo);
+    if (inscripcionExistente) {
+      return res.status(400).json({ error: 'El estudiante ya está inscrito en el grupo' });
+    }
+  
+    // Crear la inscripción
+    const nuevaInscripcion = {
+      idEstudiante: idEstudiante,
+      idGrupo: idGrupo,
+      calificacion: null // o 0, según cómo quieras inicializar la calificación
+    };
+    inscripciones.push(nuevaInscripcion);
+  
+    guardarDatosEnArchivo(inscripciones, 'inscripciones.json');
+    res.json({ message: 'Estudiante inscrito en el grupo exitosamente' });
+  });
+  
+  // --- Obtener grupos del estudiante ---
+
+  app.get('/estudiantes/grupos', autenticar, (req, res) => {
+    if (req.usuario.rol !== 'estudiante') {
+      return res.status(403).json({ error: 'No tienes permiso para acceder a esta ruta' });
+    }
+  
+    const idEstudiante = req.usuario.id;
+    const estudiante = estudiantes.find(e => e.id === idEstudiante);
+  
+    if (!estudiante) {
+      return res.status(404).json({ error: 'Estudiante no encontrado' });
+    }
+  
+    // Obtener los IDs de los grupos a los que está inscrito el estudiante
+    const idsGruposEstudiante = inscripciones
+      .filter(inscripcion => inscripcion.idEstudiante === idEstudiante)
+      .map(inscripcion => inscripcion.idGrupo);
+  
+    // Obtener los grupos completos a partir de los IDs
+    const gruposEstudiante = grupos // Buscar los grupos en el array grupos
+      .filter(grupo => idsGruposEstudiante.includes(grupo.id));
+  
+    // Obtener la información completa de las asignaturas y los profesores de los grupos
+    const gruposConInformacion = gruposEstudiante.map(grupo => {
+      const asignatura = asignaturas.find(a => a.id === grupo.asignatura);
+      const profesor = profesores.find(p => p.id === grupo.profesor);
+      const inscripcion = inscripciones.find(inscripcion => inscripcion.idEstudiante === idEstudiante && inscripcion.idGrupo === grupo.id);
+      return {
+        id: grupo.id,
+        asignatura: asignatura,
+        profesor: profesor,
+        calificacion: inscripcion ? inscripcion.calificacion : null
+      };
+    });
+  
+    res.json({ grupos: gruposConInformacion });
+  });
+
 // --- Profesores ---
 
 app.post('/registrarProfesor', async (req, res) => {
@@ -439,15 +521,13 @@ app.delete('/eliminarPersonalAdministrativo/:id', (req, res) => {
 
 app.post('/crearPlanEstudio', (req, res) => {
     const { nombre, descripcion } = req.body;
-    const nuevoPlan = new PlanEstudio(uuidv4(), nombre, descripcion);
+    const nuevoPlan = new PlanEstudio(uuidv4(), nombre, descripcion,);
     planesEstudio.push(nuevoPlan);
 
-    // Corregir la ruta para guardar los datos
     guardarDatosEnArchivo(planesEstudio, 'planesEstudio.json');
 
     res.json({ message: 'Plan de estudio creado exitosamente', id: nuevoPlan.id });
 });
-
 app.get('/obtenerPlanesEstudio', (req, res) => {
     const planes = leerDatosDesdeArchivo('planesEstudio.json');
     res.json({ planes });
@@ -484,6 +564,32 @@ app.delete('/eliminarPlanEstudio/:id', (req, res) => {
     guardarDatosEnArchivo(planesEstudio, 'planesEstudio.json');
     res.json({ message: 'Plan de estudio eliminado exitosamente' });
 });
+
+// --- Asignaturas Plan ---
+
+app.post('/agregarAsignaturaPlan', (req, res) => {
+    const { idPlan, idAsignatura } = req.body;
+    const plan = planesEstudio.find(plan => plan.id === idPlan);
+    const asignatura = asignaturas.find(asignatura => asignatura.id === idAsignatura);
+
+    if (!plan) {
+        return res.status(404).json({ error: 'Plan de estudio no encontrado' });
+    }
+    if (!asignatura) {
+        return res.status(404).json({ error: 'Asignatura no encontrada' });
+    }
+
+    // Verificar si la asignatura ya existe en el plan
+    if (plan.asignaturas.some(a => a.id === idAsignatura)) {
+        return res.status(400).json({ error: 'La asignatura ya está agregada al plan de estudio' });
+    }
+
+    plan.asignaturas.push(asignatura);
+    guardarDatosEnArchivo(planesEstudio, 'planesEstudio.json');
+    res.json({ message: 'Asignatura agregada al plan de estudio exitosamente' });
+});
+
+
 
 // --- Asignaturas ---
 
@@ -535,14 +641,16 @@ app.delete('/eliminarAsignatura/:id', (req, res) => {
 // --- Grupos ---
 
 app.post('/crearGrupo', (req, res) => {
-    const { asignatura, profesor } = req.body;
-    const nuevoGrupo = new Grupo(uuidv4(), asignatura, profesor);
+    const { asignatura, profesor, planEstudio } = req.body;
+    const nuevoGrupo = new Grupo(uuidv4(), asignatura, profesor, [], planEstudio);
     planesEstudio.forEach(plan => {
+      if (plan.id === planEstudio) { // Agregar el grupo solo al plan de estudio correspondiente
         plan.grupos.push(nuevoGrupo);
+      }
     });
     guardarDatosEnArchivo(planesEstudio, 'planesEstudio.json');
     res.json({ message: 'Grupo creado exitosamente', id: nuevoGrupo.id });
-});
+  });
 
 app.get('/obtenerGrupos', (req, res) => {
     const grupos = planesEstudio.flatMap(plan => plan.grupos);
@@ -634,9 +742,6 @@ function leerDatosDesdeArchivo(nombreArchivo) {
         return [];
     }
 }
-
-// Cargar usuarios desde archivo
-const usuarios = leerDatosDesdeArchivo('usuarios.json');
 
 // --- Servicio SOAP ---
 

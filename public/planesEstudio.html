@@ -10,42 +10,42 @@
     <nav>
       <ul id="menu">
         <li><a href="index.html">Inicio</a></li>
-        <li class="auth-estudiante">
+        <li class="auth-estudiante auth-personalAdministrativo">
           <a href="#">Estudiantes</a> 
           <ul class="submenu">
             <li><a href="estudiantes.html">Ver Estudiantes</a></li>
-            <li><a href="altaEstudiantes.html">Alta de Estudiantes</a></li>
+            <li><a href="altaEstudiantes.html" class="auth-personalAdministrativo">Alta de Estudiantes</a></li>
           </ul>
         </li>
-        <li class="auth-profesor">
+        <li class="auth-all">
           <a href="#">Profesores</a> 
           <ul class="submenu">
             <li><a href="profesores.html">Ver Profesores</a></li>
-            <li><a href="altaProfesores.html">Alta de Profesores</a></li>
+            <li><a href="altaProfesores.html" class="auth-personalAdministrativo">Alta de Profesores</a></li>
           </ul>
         </li>
         <li class="auth-personalAdministrativo">
           <a href="#">Personal Administrativo</a>
           <ul class="submenu">
             <li><a href="personalAdministrativo.html">Ver Personal</a></li>
-            <li><a href="altaPersonalAdministrativo.html">Alta de Personal</a></li>
+            <li><a href="altaPersonalAdministrativo.html" class="auth-personalAdministrativo">Alta de Personal</a></li>
           </ul>
         </li>
         <li class="auth-all"> 
           <a href="#">Planes de Estudio</a>
           <ul class="submenu">
             <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
-            <li><a href="altaPlanEstudio.html">Alta Plan de Estudio</a></li>
+            <li><a href="altaPlanEstudio.html" class="auth-personalAdministrativo">Alta Plan de Estudio</a></li>
           </ul>
         </li>
         <li class="auth-all">
           <a href="#">Asignaturas</a>
           <ul class="submenu">
             <li><a href="asignaturas.html">Ver Asignaturas</a></li>
-            <li><a href="altaAsignatura.html">Alta Asignatura</a></li>
+            <li><a href="altaAsignatura.html" class="auth-personalAdministrativo">Alta Asignatura</a></li>
           </ul>
         </li>
-        <li class="auth-all"><a href="#">Horarios</a></li> 
+        <li class="auth-estudiante"><a href="moduloEstudiante.html">Módulo</a></li>
         <li class="auth-none">
           <a href="iniciarSesion.html" id="iniciarSesionBtn">Iniciar sesión</a>
         </li>
@@ -61,7 +61,7 @@
     <h2>Lista de Planes de Estudio</h2>
 
     <a href="altaPlanEstudio.html">
-      <button class="add-button">Crear nuevo plan de estudio</button>
+      <button class="add-button" class="auth-personalAdministrativo">Crear nuevo plan de estudio</button>
     </a>
 
     <table>
@@ -100,9 +100,9 @@
           <td>${plan.nombre}</td>
           <td>${plan.descripcion}</td>
           <td>
-            <a href="editarPlanEstudio.html?id=${plan.id}"><button>Editar</button></a>
-            <button onclick="eliminarPlanEstudio('${plan.id}')">Eliminar</button>
-            <a href="grupos.html?planId=${plan.id}"><button>Ver Grupos</button></a>
+            <a href="editarPlanEstudio.html?id=${plan.id}" class="auth-personalAdministrativo"><button>Editar</button></a>
+            <a href="#" class="eliminar-plan" data-id="${plan.id}" class="auth-personalAdministrativo"><button>Eliminar</button></a>
+            <a href="verAsignaturasPlan.html?id=${plan.id}"><button>Ver Asignaturas</button></a>
           </td>
         `;
         listaPlanes.appendChild(row);
@@ -134,6 +134,25 @@
       }
     }
   }
+
+  // Manejar eventos de los enlaces
+  const listaPlanesEstudio = document.getElementById('listaPlanesEstudio');
+  listaPlanesEstudio.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target.classList.contains('eliminar-plan')) {
+      const idPlan = target.dataset.id;
+      eliminarPlanEstudio(idPlan);
+    }
+  });
+
+listaPlanesEstudio.addEventListener('click', (event) => {
+  const target = event.target;
+  // Verificar si se hizo clic en un botón "Eliminar" dentro de un enlace
+  if (target.tagName === 'BUTTON' && target.parentNode.classList.contains('eliminar-plan')) { 
+    const idPlan = target.parentNode.dataset.id;
+    eliminarPlanEstudio(idPlan);
+  }
+});
 
   // Llamar a la función para obtener la lista de planes de estudio al cargar la página
   obtenerPlanesEstudio();

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Gestionar Asignaturas - TICS Globals</title>
-  <link rel="stylesheet" type="text/css" href="styles.css">
+  <title>Ver Asignaturas del Plan</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
@@ -56,87 +56,74 @@
     </nav>
   </header>
 
-<div class="main-section">
-  <div>
-    <h2>Lista de Asignaturas</h2>
+  <div class="">
+    <h2>Asignaturas del Plan de Estudio</h2>
+    <h3 id="nombrePlan"></h3> 
 
-    <a href="altaAsignatura.html">
-      <button class="add-button auth-personalAdministrativo">Crear nueva asignatura</button>
-    </a>
+    <a href="agregarAsignaturaPlan.html" id="agregarAsignaturaLink">
+        <button class="add-button">Agregar Asignatura</button>
+      </a>
+    
 
-    <table>
+    <table border="1">
       <thead>
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Acciones</th>
         </tr>
       </thead>
       <tbody id="listaAsignaturas"></tbody>
     </table>
   </div>
-</div>
 
-<script src="scripts.js"></script>
-<script src="auth.js"></script>
-<script>
-  // Función para obtener la lista de asignaturas del servidor
-  async function obtenerAsignaturas() {
-    try {
-      const response = await fetch('http://localhost:3000/obtenerAsignaturas');
-      if (!response.ok) {
-        throw new Error('Error al obtener la lista de asignaturas');
-      }
-      const data = await response.json();
+  <script src="auth.js"></script>
+  <script>
+    // Obtener el ID del plan de estudio de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const idPlan = urlParams.get('id');
 
-      const listaAsignaturas = document.getElementById('listaAsignaturas');
-      listaAsignaturas.innerHTML = '';
+    // Guardar el ID del plan en el enlace "Agregar Asignatura"
+    const agregarAsignaturaLink = document.getElementById('agregarAsignaturaLink');
+    agregarAsignaturaLink.href = `agregarAsignaturaPlan.html?id=${idPlan}`;
 
-      data.asignaturas.forEach(asignatura => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${asignatura.id}</td>
-          <td>${asignatura.nombre}</td>
-          <td>${asignatura.descripcion}</td>
-          <td>
-            <a href="editarAsignatura.html?id=${asignatura.id}" class="auth-personalAdministrativo"><button>Editar</button></a>
-            <button onclick="eliminarAsignatura('${asignatura.id}')" class="auth-personalAdministrativo">Eliminar</button>
-          </td>
-        `;
-        listaAsignaturas.appendChild(row);
-      });
+    // Obtener el nombre del plan de estudio
+    obtenerNombrePlan(idPlan);
 
-    } catch (error) {
-      console.error('Error al obtener la lista de asignaturas:', error);
-      alert('Error al obtener la lista de asignaturas');
-    }
-  }
-
-  // Función para eliminar una asignatura
-  async function eliminarAsignatura(id) {
-    if (confirm('¿Estás seguro de que quieres eliminar esta asignatura?')) {
+    async function obtenerNombrePlan(idPlan) {
       try {
-        const response = await fetch(`http://localhost:3000/eliminarAsignatura/${id}`, {
-          method: 'DELETE',
-        });
-
-        if (response.ok) {
-          alert('Asignatura eliminada exitosamente');
-          obtenerAsignaturas(); // Actualizar la lista de asignaturas
-        } else {
-          alert('Error al eliminar la asignatura');
+        const response = await fetch(`http://localhost:3000/obtenerPlanEstudio/${idPlan}`);
+        if (!response.ok) {
+          throw new Error('Error al obtener el plan de estudio');
         }
+        const data = await response.json();
+
+        // Mostrar el nombre del plan
+        document.getElementById('nombrePlan').textContent = data.plan.nombre; 
+
+        // Mostrar las asignaturas del plan
+        const listaAsignaturas = document.getElementById('listaAsignaturas');
+        listaAsignaturas.innerHTML = '';
+
+        if (data.plan.asignaturas && data.plan.asignaturas.length > 0) {
+          data.plan.asignaturas.forEach(asignatura => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${asignatura.id}</td>
+              <td>${asignatura.nombre}</td>
+            `;
+            listaAsignaturas.appendChild(row);
+          });
+        } else {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td colspan="2">No hay asignaturas asignadas a este plan</td>`;
+          listaAsignaturas.appendChild(row);
+        }
+
       } catch (error) {
-        console.error('Error al eliminar la asignatura:', error);
-        alert('Error al eliminar la asignatura');
+        console.error('Error al obtener el plan de estudio:', error);
+        alert('Error al obtener el plan de estudio');
       }
     }
-  }
-
-  // Llamar a la función para obtener la lista de asignaturas al cargar la página
-  obtenerAsignaturas();
-</script>
-
+  </script>
 </body>
 </html>

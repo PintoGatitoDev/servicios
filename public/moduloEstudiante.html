@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Módulo Estudiante</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>TICS Globals</h1>
+        <nav>
+          <ul id="menu">
+            <li><a href="index.html">Inicio</a></li>
+            <li class="auth-estudiante auth-personalAdministrativo">
+              <a href="#">Estudiantes</a> 
+              <ul class="submenu">
+                <li><a href="estudiantes.html">Ver Estudiantes</a></li>
+                <li><a href="altaEstudiantes.html" class="auth-personalAdministrativo">Alta de Estudiantes</a></li>
+              </ul>
+            </li>
+            <li class="auth-all">
+              <a href="#">Profesores</a> 
+              <ul class="submenu">
+                <li><a href="profesores.html">Ver Profesores</a></li>
+                <li><a href="altaProfesores.html" class="auth-personalAdministrativo">Alta de Profesores</a></li>
+              </ul>
+            </li>
+            <li class="auth-personalAdministrativo">
+              <a href="#">Personal Administrativo</a>
+              <ul class="submenu">
+                <li><a href="personalAdministrativo.html">Ver Personal</a></li>
+                <li><a href="altaPersonalAdministrativo.html" class="auth-personalAdministrativo">Alta de Personal</a></li>
+              </ul>
+            </li>
+            <li class="auth-all"> 
+              <a href="#">Planes de Estudio</a>
+              <ul class="submenu">
+                <li><a href="planesEstudio.html">Ver Planes de Estudio</a></li>
+                <li><a href="altaPlanEstudio.html" class="auth-personalAdministrativo">Alta Plan de Estudio</a></li>
+              </ul>
+            </li>
+            <li class="auth-all">
+              <a href="#">Asignaturas</a>
+              <ul class="submenu">
+                <li><a href="asignaturas.html">Ver Asignaturas</a></li>
+                <li><a href="altaAsignatura.html" class="auth-personalAdministrativo">Alta Asignatura</a></li>
+              </ul>
+            </li>
+            <li class="auth-estudiante"><a href="moduloEstudiante.html">Módulo</a></li>
+            <li class="auth-none">
+              <a href="iniciarSesion.html" id="iniciarSesionBtn">Iniciar sesión</a>
+            </li>
+            <li class="auth-close">
+              <a href="#" id="cerrarSesionBtn">Cerrar sesión</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
+  <div class="main-section">
+    <h2>Módulo Estudiante</h2>
+
+    <div id="informacionEstudiante">
+      <h3>Información del Estudiante</h3>
+      <p>Nombre: <span id="nombreEstudiante"></span></p>
+      <p>Edad: <span id="edadEstudiante"></span></p>
+      <p>Correo: <span id="correoEstudiante"></span></p>
+      </div>
+
+    <div id="gruposEstudiante">
+      <h3>Grupos</h3>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>ID Grupo</th>
+            <th>Asignatura</th>
+            <th>Profesor</th>
+          </tr>
+        </thead>
+        <tbody id="listaGrupos"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    // Obtener la información del estudiante
+    obtenerInformacionEstudiante();
+
+    // Obtener los grupos del estudiante
+    obtenerGruposEstudiante();
+
+    async function obtenerInformacionEstudiante() {
+      try {
+        const token = obtenerToken(); // Función para obtener el token del usuario
+        const response = await fetch('http://localhost:3000/estudiantes/perfil', {
+          headers: {
+            'Authorization': token
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Error al obtener la información del estudiante');
+        }
+        const data = await response.json();
+
+        document.getElementById('nombreEstudiante').textContent = data.estudiante.nombre;
+        document.getElementById('edadEstudiante').textContent = data.estudiante.edad;
+        document.getElementById('correoEstudiante').textContent = data.estudiante.correo;
+
+      } catch (error) {
+        console.error('Error al obtener la información del estudiante:', error);
+        alert('Error al obtener la información del estudiante');
+      }
+    }
+
+    async function obtenerGruposEstudiante() {
+      try {
+        const token = obtenerToken(); // Función para obtener el token del usuario
+        const response = await fetch('http://localhost:3000/estudiantes/grupos', { // Nueva ruta en el servidor
+          headers: {
+            'Authorization': token
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Error al obtener los grupos del estudiante');
+        }
+        const data = await response.json();
+
+        const listaGrupos = document.getElementById('listaGrupos');
+        listaGrupos.innerHTML = '';
+
+        if (data.grupos && data.grupos.length > 0) {
+          data.grupos.forEach(grupo => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${grupo.id}</td>
+              <td>${grupo.asignatura.nombre}</td>
+              <td>${grupo.profesor.nombre}</td>
+            `;
+            listaGrupos.appendChild(row);
+          });
+        } else {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td colspan="3">No estás inscrito en ningún grupo</td>`;
+          listaGrupos.appendChild(row);
+        }
+
+      } catch (error) {
+        console.error('Error al obtener los grupos del estudiante:', error);
+        alert('Error al obtener los grupos del estudiante');
+      }
+    }
+  </script>
+</body>
+</html>

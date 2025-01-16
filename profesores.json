@@ -1,11 +1,11 @@
 [
   {
-    "id": "0ffea507-9890-4c8e-b5d9-2898870e3efb",
-    "nombre": "Pedro",
-    "edad": "43",
-    "especialidad": "Matematicas",
-    "correo": "pepe@pepe.com",
-    "telefono": "5555555555",
-    "direccion": "Calle 3"
+    "id": "10339460-7894-438d-b8e3-a88bca57ad09",
+    "nombre": "profesor",
+    "edad": "40",
+    "especialidad": "Formacion",
+    "correo": "profesor@profesor.com",
+    "telefono": "5435435435546",
+    "direccion": "Calle 1213"
   }
 ]

@@ -1,8 +1,14 @@
 [
   {
-    "id": "0cdf8d3e-059f-4fb2-a311-7e668015e9e6",
+    "id": "5f487ec6-41a6-4c6c-bde4-d2a7443c8429",
     "nombre": "Ingenieria en Computacion",
     "descripcion": "Ingenieria en computacion",
-    "grupos": []
+    "asignaturas": [
+      {
+        "id": "a095bee1-7b2a-4968-b8b4-58bc24cd9d4c",
+        "nombre": "Algebra",
+        "descripcion": "sadasd"
+      }
+    ]
   }
 ]

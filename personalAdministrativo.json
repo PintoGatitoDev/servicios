@@ -1,11 +1,11 @@
 [
   {
-    "id": "14fbfc2f-f1e3-4e05-8f18-1deb9b8aec07",
-    "nombre": "Juan",
-    "edad": "123",
-    "cargo": "Nose",
-    "correo": "pepe@pepe.com",
-    "telefono": "5555555555",
-    "direccion": "calle 5"
+    "id": "fc272c04-694b-49e9-8220-d673ca080ad4",
+    "nombre": "admin",
+    "edad": "40",
+    "cargo": "Administrador",
+    "correo": "admin@admin.com",
+    "telefono": "5435435435546",
+    "direccion": "Calle 1213"
   }
 ]

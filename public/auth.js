@@ -2,21 +2,29 @@
 function actualizarMenu() {
     const token = obtenerToken(); // Obtener el token de la cookie
     const rol = localStorage.getItem('rol');
-    const authItems = document.querySelectorAll('#menu li[class^="auth-"]');
-    
+    const authItems = document.querySelectorAll('[class*="auth-"]');
+    console.log(authItems);
     authItems.forEach(item => {
+      item.style.display= 'none';
       if (item.classList.contains('auth-none') && !token) { 
         // Mostrar solo si no hay token y tiene la clase 'auth-none'
         item.style.display = 'inline-block';
-      } else if (token && rol && item.classList.contains('auth-' + rol)) { 
-        // Mostrar si hay token, rol y la clase coincide con el rol
+        } else if(item.classList.contains('auth-estudiante') && rol == "estudiante"){
+        item.style.display = 'inline-block';
+        } else if(item.classList.contains('auth-profesor') && rol == "profesor"){
+        item.style.display = 'inline-block';
+        } else if(item.classList.contains('auth-personalAdministrativo') && rol == "personalAdministrativo"){
         item.style.display = 'inline-block';
       } else if(item.classList.contains('auth-close') && token){
         item.style.display = 'inline-block';
-      } else {
+      }else if(item.classList.contains('auth-all') && token){
+        item.style.display = 'inline-block'; }
+      else {
         item.style.display = 'none';
       }
     });
+
+    
   }
   // Almacena el token en una cookie HttpOnly 
   function guardarToken(token) {

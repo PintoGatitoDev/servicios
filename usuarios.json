@@ -10,5 +10,17 @@
     "nombreUsuario": "pepe",
     "contrasena": "$2b$10$aG0ahoHCL6NNzUHktlhjweFzM5iLAu8/OfO2d1SuNCqK45d/.SQ0u",
     "rol": "estudiante"
+  },
+  {
+    "id": "10339460-7894-438d-b8e3-a88bca57ad09",
+    "nombreUsuario": "profesor",
+    "contrasena": "$2b$10$yvWmb5AUJtb3qVhR46zVBOPcw2haZhnPcU/URwb2v8Zbcm2EYhH6G",
+    "rol": "profesor"
+  },
+  {
+    "id": "fc272c04-694b-49e9-8220-d673ca080ad4",
+    "nombreUsuario": "admin",
+    "contrasena": "$2b$10$WE/IuJ6j1rP31FYeEroI/udCpHr7bG7pZ4RvUJstn0SHQ2Rf3AEo2",
+    "rol": "personalAdministrativo"
   }
 ]
